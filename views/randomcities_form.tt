@@ -1,0 +1,17 @@
+ <form method="post" action="[% request.uri_base %]/explore" class="custom">
+	<select style="display:none;" id="rcity" name="rcity">
+	[% FOREACH rcity in randomcities %]
+		<option value="[% rcity.city %]" [% IF loop.first %]selected="selected"[% END %]>[% rcity.city %]</option>
+	[% END %]
+	</select>
+	<div class="custom dropdown">
+		<a href="#" class="current">[% randomcities.0.city %]</a>
+		<a href="#" class="selector"></a>
+		<ul>
+		[% FOREACH rcity in randomcities %]
+			<li>[% rcity.city %]</li>
+		[% END %]
+		</ul>
+	</div>			 	
+	<input type="submit" class="button alert" value="Go!" />
+</form>

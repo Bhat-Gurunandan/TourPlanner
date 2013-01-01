@@ -1,0 +1,176 @@
+<div class="row">
+	<div class="eight columns centered">
+		<h3>Design your Own Tour!</h3>
+		<p>
+			We have created a unique Travel Wizard that lets you put together a customised tour online. You simply 
+			choose the places you wish to visit, and select your preferred mode of transport. Our Travel Wizard 
+			then creates a suggested itinerary with a costing. You are able to amend the proposed itinerary to 
+			arrive at a program of your choice.
+		</p>
+		<p>Take your time and enjoy your trip.</p>
+		<h4>A Few Questions before we begin&hellip;</h4>
+		<form method="post" action="[% request.uri_base %]/diy">
+			<fieldset id="main">
+				<legend>Details about your Party</legend>
+				<div class="row">
+					<div class="ten columns">
+						<label for="leadname">Lead Name: [% err.leadname %]</label>
+						<input type="text" id="leadname" name="leadname" value="[% valid.leadname %]" placeholder="Your Name" />
+					</div>
+					<div class="two columns">
+						<label for="pax">Travellers: [% err.pax %]</label>
+						<select id="pax" name="pax">
+							[% FOREACH n IN [1 .. 20] %]
+							<option value="[% n %]"[% IF valid.pax == n %] selected="selected"[% END %]>[% n %]</option>
+							[% END %]
+						</select>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset id="hotel">
+				<legend>Your Hotel and Room Preferences</legend>
+				<div class="row">
+					<div class="six columns">
+						<div class="row">
+							<div class="four columns">
+								<label for="hotelcategory" class="right inline">Hotel Category: </label>
+							</div>
+							<div class="eight columns">
+								[% categories = [
+									{val => 40, name => 'Top of the Line'}
+									{val => 30, name => 'Luxury' }
+									{val => 20, name => 'Superior'}
+									{val => 10, name => 'Standard'} 
+								  ] 
+								%]
+								<select id="hotelcategory"  name="hotelcategory">
+								[% FOREACH category IN categories %]
+									<option value="[% category.val %]"[% IF valid.hotelcategory == category.val %] selected="selected"[% END %]>[% category.name %]</option>
+								[% END %]
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="six columns">
+						<div class="row">
+							<div class="eight columns">
+								<label for="single" class="right inline">Single Room(s): </label>
+							</div>
+							<div class="four columns">
+								[% err.bedroom_type %]
+								<select id="single" name="single" size="1">
+								[% FOREACH n IN [0 .. 10] %]
+									[% IF n > 0 %][% val = n %][% ELSE %][% val = "" %][% END %]	
+									<option value="[% val %]"[% IF valid.single == val %] selected="selected"[% END %]>[% n %]</option>
+								[% END %]
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="eight columns">
+								<label for="double" class="right inline">Double Room(s):</label>
+							</div>
+							<div class="four columns">
+								<select id="double" name="double" size="1">
+								[% FOREACH n IN [0 .. 10] %]
+									[% IF n > 0 %][% val = n %][% ELSE %][% val = "" %][% END %]	
+									<option value="[% val %]"[% IF valid.double == val %] selected="selected"[% END %]>[% n %]</option>
+								[% END %]
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="eight columns">
+								<label for="twin" class="right inline">Double Room(s) (2 beds):</label>
+							</div>
+							<div class="four columns">
+								<select id="twin" name="twin" size="1">
+								[% FOREACH n IN [0 .. 10] %]
+									[% IF n > 0 %][% val = n %][% ELSE %][% val = "" %][% END %]
+									<option value="[% val %]"[% IF valid.twin == val %] selected="selected"[% END %]>[% n %]</option>
+								[% END %]
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset id="arrdep">
+				<legend>Your Arrival and Departure Details</legend>
+				<h6>Arrival Details</h6>
+				<p>
+					Please note that most hotels in India have a check-in and check-out time of 12 noon.
+				 	If your flight arrival is in the early hours of the day, we therefore need to book your
+				 	accommodation already from the previous night. The start date of the tour may therefore
+				 	be one day before your flight arrival date.
+				 </p>
+				 <div class="row">
+				 	<div class="six columns">
+						[% err.arrdate %]
+				 		<div class="four columns">
+							<Label for="arrdate" class="right inline">Arriving On:</Label>
+						</div>
+						<input id="arrdate" name="arrdate" type="text" value="[% valid.arrdate %]" class="eight datepicker"/>
+					</div>
+				 	<div class="six columns">
+				 		<div class="four columns">
+							<label for="arrplace" class="right inline">Arriving In:</label>
+						</div>
+						<div class="eight columns">
+							<select id="arrplace" name="arrplace" size="1">
+							[% FOREACH airports %]
+								<option value="[% cities_id %]"[% IF valid.arrplace == cities_id %] selected="selected"[% END %]>[% city %]</option>
+							[% END %]
+							</select>
+						</div>
+					</div>
+				</div>
+				<hr />
+				<h6>Starting City of Tour</h6>
+				<p>
+					The starting city of your may be the same city as where the airport is located or can
+					be another city nearby where you would like to spend your first night. For instance, your
+					flight may land in Chennai but you may want to spend the night in nearby Mamallapuram.
+				</p>
+				<div class="row">
+					<div class="three columns offset-by-three">				
+						<label for="startplace" class="right inline">Start Tour From (City):</label>
+					</div>
+					<div class="three columns end">
+						<select id="startplace" name="startplace" size="1">
+						[% FOREACH cities %]
+							<option value="[% cities_id %]"[% IF valid.startplace == cities_id %] selected="selected"[% END %]>[% city %]</option>
+						[% END %]
+						</select>
+					</div>
+				</div>
+				<hr />
+				<h6>Departure</h6>
+				 <div class="row">
+				 	<div class="six columns">
+				 		[% err.depdate %]
+				 		<div class="four columns">
+							<Label for="depdate" class="right inline">Depart On:</Label>
+						</div>
+						<input id="depdate" name="depdate" value="[% valid.depdate %]" type="text" class="eight datepicker"/>
+					</div>
+				 	<div class="six columns">
+				 		<div class="four columns">
+							<label for="depplace" class="right inline">Depart from:</label>
+						</div>
+						<div class="eight columns">
+							<select id="depplace" name="depplace" size="1">
+							[% FOREACH airports %]
+								<option value="[% cities_id %]"[% IF valid.depplace == cities_id %] selected="selected"[% END %]>[% city %]</option>
+							[% END %]
+							</select>
+						</div>
+					</div>
+				</div>
+				<p style="text-align: center;">
+					<input type="submit" class="button" name="submit" value="Start my Tour!" />
+				</p>
+			</fieldset>
+		</form>
+	</div>
+</div>

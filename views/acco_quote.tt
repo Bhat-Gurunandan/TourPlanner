@@ -1,0 +1,29 @@
+[% IF session.status.stops %]
+<table>
+	<thead>
+		<tr>
+			<th>City</th>
+			<th>Hotel</th>
+			<th>From</th>
+			<th>To</th>
+			<th>Days</th>
+		</tr>
+	</thead>
+	<tbody>
+		[% FOREACH mystop IN session.status.stops %]
+		<tr>
+			<td>[% mystop.dest.city %]</td>
+			<td>[% mystop.hotel %]</td>
+			<td>[% date.format(mystop.arrdate, '%a, %d %b %Y') %]</td>
+			<td>[% date.format(mystop.depdate, '%a, %d %b %Y') %]</td>
+			<td>[% mystop.days %]</td>
+		</tr>
+		[% END %]
+	</tbody>
+</table>
+[% ELSE %]
+<p>
+	You have yet to choose a destination. Your itinerary will be displayed 
+	as soon as you select your first destination.
+</p>
+[% END %]

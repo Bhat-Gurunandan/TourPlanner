@@ -1,0 +1,3 @@
+[% FOREACH cities %]
+	<option value="[% cities_id %]"[% selected %]>[% city %]</option>
+[% END %]
