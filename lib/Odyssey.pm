@@ -167,8 +167,8 @@ get '/explore/:city' => sub {
 			routes => $routes,
 		}
 	};
-	
-	template move_to => $citydetails;
+
+	template move_to => {%$citydetails, daywiseitin => build_itinerary()};
 };
 
 post '/transit' => sub {
@@ -185,10 +185,18 @@ post '/transit' => sub {
 	my (undef, $lat, $lng) = @{city($status->{dest}{cityid})};
 	
 	my $route = $status->{dest}{routes}[$params->{travelopts}];
-	debug to_dumper($route);
 	
 	my $days = $params->{days};
-	my ($daynum, $date) = departuredate(
+	
+	# Get arrival daynum at destination
+	my ($arrdaynum, undef) = departuredate (
+		$status->{config}{arrdate},
+		$route->{hops}[-1]{arrival}, 
+		0
+	);
+	
+	# Get departure daynum from source
+	my ($daynum, $date) = departuredate (
 		$status->{config}{arrdate},
 		$route->{hops}[-1]{arrival}, 
 		$days
@@ -197,11 +205,13 @@ post '/transit' => sub {
 	my $hotelid = $params->{hotelid};
 	my $hotel = hotel($hotelid);
 	
-	debug "Hotel: $hotel";
-	
 	push @{$status->{stops}}, {
 		src => $status->{src},
-		dest => {%{$status->{dest}}, routes => {}},
+		dest => {
+			%{$status->{dest}}, 
+			routes => {},
+			daynum => $arrdaynum,
+		},
 		route => $route,
 		hotelid => $hotelid,
 		hotel => $hotel,
@@ -244,13 +254,29 @@ get '/explore_around/:city' => sub {
 		
 	my $options = nearcities($cityid);
 	
-	my $stops = build_accoquote();
-	debug to_dumper($stops);
-	
+
+	my $itin = build_itinerary();
+	debug 'Itinerary: ' . to_dumper($itin);
+
 	template move_on => {
 		cities => $options, 
-		randomcities => randomcities()
+		randomcities => randomcities(),
+		daywiseitin => build_itinerary(),
 	};	
+};
+
+get '/stops' => sub {
+	
+	my $stops = session('status')->{stops};
+	my @cities;
+	
+	foreach ( @{$stops} ) {
+		
+		push @cities, $_->{src};		
+	}
+	push @cities, session('status')->{src};
+	
+	return to_json(\@cities);
 };
 
 sub validate_diy {
@@ -345,12 +371,85 @@ sub build_accoquote {
 			hotelid => $_->{hotelid},
 			hotel => $_->{hotel},
 			from => $_->{arrdate},
-			to => $_->{depdate},
+			to => $_->{depdate}, 
 			days => $_->{days},
 		};
 	}
 
 	return \@quotes;	
+}
+
+sub build_itinerary {
+	
+	my $status = session('status');
+	return unless
+		$status && (my $stops = $status->{stops});
+	
+	my @itin = ();
+	my ($depdaynum, $depdate, $depcity, $days);
+	my @stops = @{$stops};
+	
+	foreach (@stops) {
+		
+		my $src = $_->{src};
+		my $dest = $_->{dest};
+
+		$itin[$src->{daynum}]->{desc} = $itin[$src->{daynum}]->{desc} || '';
+		$itin[$src->{daynum}] = {
+			
+			date => $src->{date},
+			desc => $itin[$src->{daynum}]->{desc} . 'Depart ' . $src->{city} . ' for ' . $dest->{city} . '. ',
+			cont => 'In Transit', 
+		};
+		
+		$itin[$dest->{daynum}]->{desc} = $itin[$dest->{daynum}]->{desc} || '';
+		$itin[$dest->{daynum}] = {
+
+			date => $_->{arrdate}, 
+			desc => $itin[$dest->{daynum}]->{desc} . 'Arrive in ' . $dest->{city} . '. ',
+			cont => 'Stay at ' . $_->{hotel},
+		};
+		
+		$depdate = $_->{depdate};
+		$depdaynum = $dest->{daynum};
+		$depcity = $dest->{city};
+		$days = $_->{days};
+	}
+	if (@stops) {
+		$itin[$depdaynum + $days] = {
+			date => $depdate,
+			desc => 'Ready to depart ' . $depcity,
+			cont => '',
+		};
+	}
+	
+	# The first element is junk
+	if (@itin) {
+		shift @itin;
+	}
+	else {
+		return;
+	}
+	
+	my ($date, $desc);
+	foreach (@itin) {
+		
+		if ($_) {
+			
+			$date = $_->{date};
+			$desc = $_->{cont};
+		}
+		else {
+			
+			$date = add_days_to_date($date, 1);
+			$_ = {
+				date => $date,
+				desc => $desc,
+			};
+		}
+	}
+
+	return \@itin;	
 }
 
 true;

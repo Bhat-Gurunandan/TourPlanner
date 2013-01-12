@@ -10,118 +10,126 @@
 			<h1>About [% city %]</h1>
 			<h2>[% oneliner %]</h2>
 			[% writeup | $AddPTags %]
-		</div>
-	</div>
-<div class="row">
-	<div class="twelve columns">
-	<hr />
-		<h2>Things To See and Do in [% city %]</h2>
-	</div
-</div>
-<div class="row">
-	<div class="twelve columns">
-		<div class="six columns">
-			<div class="th">
-				<img src="[% request.uri_base %]/images/city/city_[% cities_id %]_collage.gif" width="470" height="514" />
-			</div>
-			[% webwriteup | $AddPTags %]
-		</div>
-		<div class="six columns">
-			<div class="panel">
-				<h2>Your Tour Status Today</h2>
-				<p>
-					Today is <strong>[% date.format(session.status.src.date, '%a, %d %b %Y') %] - Day [% session.status.src.daynum %]</strong> of your Tour.
-					You are currently in <strong>[% session.status.src.city %]</strong> and ready to leave.
-					You are considering <strong>[% city %]</strong> as your next destination
-				</p>
-			</div>
-			<h2>Special Places in [% city %]</h2>
-			<h3><a href="#" data-reveal-id="hotel[% defhotel.hotel_id %]" data-animation="fade">[% defhotel.hotel %]</a> ([% defhotel.category %])</h3>
-			<a href="#" class="th" style="float: left; margin: 0 1.8em 1.8em 0;" data-reveal-id="hotel[% defhotel.hotel_id %]" data-animation="fade">
-				<img src="[% request.uri_base %]/images/hotel/defaulthotel_[% defhotel.hotel_id %].jpg" width="220" height="150" />
-			</a>
-			<p>[% defhotel.description | $AddPTags | $FirstPara %]</p>
-			<p><a href="#" data-reveal-id="hotel[% defhotel.hotel_id %]" data-animation="fade">Read More &raquo;</a></p>
-			<hr />
-			[% IF hotels.size > 1 %]
-				<h3>Other Places in [% city %]</h3>
-				[% FOREACH hotel IN hotels %]
-					[% IF hotel.hotel_id != defhotel.hotel_id %]
-					<h3><a href="#" data-reveal-id="hotel[% hotel.hotel_id %]" data-animation="fade">[% hotel.hotel %]</a> ([% hotel.category %])</h3>
-					<a href="#" class="th" style="float: left; margin: 0 1.8em 1.8em 0" data-reveal-id="hotel[% hotel.hotel_id %]" data-animation="fade">
-						<img src="[% request.uri_base %]/images/hotel/defaulthotel_[% hotel.hotel_id %].jpg" width="220" height="150" />
-					</a>
-					<p>[% hotel.description | $AddPTags | $FirstPara %]</p>
-					<p><a href="#" data-reveal-id="hotel[% hotel.hotel_id %]" data-animation="fade">Read More &raquo;</a></p>
-					[% IF ! loop.last %]<hr />[% END %]
-					[% END %]
-				[% END %]
-			[% END %]
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="twelve columns">
-		<hr />
-		<div class="eight columns panel">
-			<h3>Yes, I want to Stay in [% city %]</h3>
+			
 			<p>
-				If you want to visit [% city %] please enter your preferences here. We have chosen the 
-				best options for you. Feel free to change them if you wish and click on "Take me to [% city %]".
+				<a href="#" data-reveal-id="todos" data-animation="fade"><strong>Things to see and do in [% city %]</strong></a>
+				<br />
+				<a href="#" data-reveal-id="citywise-itin" data-animation="fade"><strong>View your city-wise itinerary</strong></a>
+				<br />
+				<a href="#" data-reveal-id="daywise-itin" data-animation="fade"><strong>View your day-wise itinerary</strong></a>
 			</p>
-			<form method=post action="[% request.uri_base %]/transit" class="custom">
-				<fieldset>
-					<legend style="background: none;">Choose your Stay Options</legend>
-					<label for="days">Nights in [% city %]</label> 
-					<select id="days" name="days" size="1" class="one">
-						[% FOREACH numdays IN [1 .. 10] %]
-						<option[% IF numdays == defaultdays %] selected="selected"[% END %]>[% numdays %]</option>
-						[% END %]
-					</select>
-	
-					<label for="hotel">I would like to stay at the</label>
-					<select name="hotelid" size="1" class="three">
-						[% FOREACH hotel IN hotels %]
-						<option value="[% hotel.hotel_id %]"[% IF defhotel.hotel_id == hotel.hotel_id %] selected="selected"[% END %]>[% hotel.hotel %]</option>
-						[% END %]
-					</select>
-				</fieldset>
-				<fieldset>
-					<legend style="background: none;">Choose your travel options</legend>
-					<p>Here is our recommended way to travel <strong>from [% session.status.src.city %] to [% city %]:</strong></p>
-					[% INCLUDE route_options.tt %]
-				</fieldset>
-				<input type="submit" class="button" value="Take me to [% city %]" /></p>
-			</form>
-		</div>
-		<div class="four columns">
-			<h3>No, Show me other places around [% session.status.src.city %]</h3>
-			<ul class="disc">
-				[% FOREACH nrcity IN nearcities %]
-				<li><a href="[% request.uri_base %]/explore/[% nrcity.city %]">[% nrcity.city %]</a></li>
-				[% END %]
-			</ul>
-			<h3>Or other places further away: </h3>
-			[% INCLUDE randomcities_form.tt %]
-			<p>Or <a href="travel.cgi?mode=end_tour">End my tour now</a> at [% session.status.src.city %]</p>					
 		</div>
 	</div>
-</div>
-[% FOREACH hotel IN hotels %]
-<div id="hotel[% hotel.hotel_id %]" class="reveal-modal medium">
 	<div class="row">
 		<div class="twelve columns">
-  			<a class="close-reveal-modal">&#215;</a>
-  			<h2>[% hotel.hotel %]</h2>
-  			<div class="th">
-  				<img src="[% request.uri_base %]/images/hotel/hotel_[% hotel.hotel_id %]_collage.gif" />
-  			</div>
-  		</div>
-  	</div>
-  	<div class="row">
-  		<div class="twelve columns">
-  			[% hotel.description | $AddPTags %]
+			<hr />
+		</div>
+	</div>
+	<div class="row">
+		<div class="twelve columns">
+			<div class="eight columns">
+				<h3>Yes, I want to Stay in [% city %]</h3>
+				<p>
+					If you want to visit [% city %] please enter your preferences here. We have chosen the 
+					best options for you. Feel free to change them if you wish and click on "Take me to [% city %]".
+				</p>
+				<form method=post action="[% request.uri_base %]/transit" class="custom">
+					<fieldset>
+						<legend style="background: none;">Choose your Stay and Travel Options</legend>
+						<p>
+							<label for="days">Nights in [% city %]</label> 
+							<select id="days" name="days" size="1" class="one">
+								[% FOREACH numdays IN [1 .. 10] %]
+								<option[% IF numdays == defaultdays %] selected="selected"[% END %]>[% numdays %]</option>
+								[% END %]
+							</select>
+						</p>
+						<p>Select a hotel for your stay in [% city %] (click hotel name to see details):</p>
+						<p>
+							[% FOREACH hotel IN hotels %]
+							<label for="hotelid[% hotel.hotel_id %]">
+								<input type="radio" id="hotelid[% hotel.hotel_id %]" name="hotelid" value="[% hotel.hotel_id %]"[% IF defhotel.hotel_id == hotel.hotel_id %] checked[% END %] />
+								<a href="#" data-reveal-id="hotel[% hotel.hotel_id %]" data-animation="fade">[% hotel.hotel %]</a>
+							</label>
+							[% END %]
+						</p>
+						<p>Here is our recommended way to travel <strong>from [% session.status.src.city %] to [% city %]:</strong></p>
+						[% INCLUDE route_options.tt %]
+					</fieldset>
+					<input type="submit" class="button" value="Take me to [% city %]" /></p>
+				</form>
+				<h3>No, Show me other places around [% session.status.src.city %]</h3>
+				<ul class="disc">
+					[% FOREACH nrcity IN nearcities %]
+					<li><a href="[% request.uri_base %]/explore/[% nrcity.city %]">[% nrcity.city %]</a></li>
+					[% END %]
+				</ul>
+				<h3>Or other places further away from [% session.status.src.city %]&hellip; </h3>
+				[% INCLUDE randomcities_form.tt %]
+				<p>Or <a href="/end_tour">End my tour now</a> at [% session.status.src.city %]</p>					
+			</div>
+			<div class="four columns">
+				<div class="panel">
+					<h2>Your Tour Status Today</h2>
+					<p>
+						Today is <strong>[% date.format(session.status.src.date, '%a, %d %b %Y') %] - Day [% session.status.src.daynum %]</strong> of your Tour.
+						You are currently in <strong>[% session.status.src.city %]</strong> and ready to leave.
+						You are considering <strong>[% city %]</strong> as your next destination
+					</p>
+					<p>
+						Your previous destinations and the order in which you have visited each are marked in blue on the map of the region below
+					</p>
+					<div id="gmap" style="height: 400px; width: 100%"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	[% FOREACH hotel IN hotels %]
+	<div id="hotel[% hotel.hotel_id %]" class="reveal-modal medium">
+		<div class="row">
+			<div class="twelve columns">
+	  			<a class="close-reveal-modal">&#215;</a>
+	  			<h2>[% hotel.hotel %]</h2>
+	  			<div class="th">
+	  				<img src="[% request.uri_base %]/images/hotel/hotel_[% hotel.hotel_id %]_collage.gif" />
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="row">
+	  		<div class="twelve columns">
+	  			[% hotel.description | $AddPTags %]
+			</div>
+		</div>
+	</div>
+	[% END %]
+	<div id="todos" class="reveal-modal medium">
+		<div class="row">
+			<div class="twelve columns">
+	  			<a class="close-reveal-modal">&#215;</a>
+				<h2>Things To See and Do in [% city %]</h2>
+				<div class="th">
+					<img src="[% request.uri_base %]/images/city/city_[% cities_id %]_collage.gif" width="470" height="514" />
+				</div>
+				[% webwriteup | $AddPTags %]
+			</div>
+		</div>
+	</div>
+	<div id="citywise-itin" class="reveal-modal large">
+		<div class="rows">
+			<div class="twelve columns">
+	  			<a class="close-reveal-modal">&#215;</a>
+				[% INCLUDE acco_quote.tt %]
+			</div>
+		</div>
+	</div>
+	<div id="daywise-itin" class="reveal-modal large">
+		<div class="rows">
+			<div class="twelve columns">
+	  			<a class="close-reveal-modal">&#215;</a>
+				[% INCLUDE day_wise_itin.tt %]
+			</div>
 		</div>
 	</div>
 </div>
-[% END %]
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZio3-tNd89xE36fpkNaf4m4TYxXrg7Xs&sensor=false"></script>
+<script src="[% request.uri_base %]/javascripts/odyssey_stops.js"></script>

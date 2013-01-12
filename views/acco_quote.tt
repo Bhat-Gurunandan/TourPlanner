@@ -1,4 +1,5 @@
-[% IF session.status.stops %]
+[% IF session.status.stops.size > 0 %]
+<h2>Your City-wise Tour Summary</h2>
 <table>
 	<thead>
 		<tr>
@@ -14,8 +15,8 @@
 		<tr>
 			<td>[% mystop.dest.city %]</td>
 			<td>[% mystop.hotel %]</td>
-			<td>[% date.format(mystop.arrdate, '%a, %d %b %Y') %]</td>
-			<td>[% date.format(mystop.depdate, '%a, %d %b %Y') %]</td>
+			<td>[% date.format(mystop.arrdate, '%a, %d %b') %] (Day:[% mystop.dest.daynum %])</td>
+			<td>[% date.format(mystop.depdate, '%a, %d %b') %] (Day:[% mystop.dest.daynum + mystop.days %])</td>
 			<td>[% mystop.days %]</td>
 		</tr>
 		[% END %]

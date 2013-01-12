@@ -14,6 +14,7 @@ use Exporter qw{import};
 our @EXPORT = qw{
 	routefinder
 	departuredate
+	add_days_to_date
 };
 
 =head1 NAME
@@ -163,6 +164,22 @@ sub duration {
 	return "$hours hours";
 }
 
+
+sub add_days_to_date {
+	
+	my ($start, $days) = @_;
+	
+	my $strpt = DateTime::Format::Strptime->new({
+		pattern => '%Y-%m-%d %H:%M:%S.000',
+		time_zone => 'Asia/Kolkata'
+	});
+
+	my $dtstart = $strpt->parse_datetime($start);
+	my $du = DateTime::Duration->new(days => $days);
+	$dtstart->add_duration($du);
+	
+	return $dtstart->strftime('%Y-%m-%d %H:%M:%S.000');
+}
 
 =head1 AUTHOR
 

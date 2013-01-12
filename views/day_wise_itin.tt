@@ -1,0 +1,26 @@
+[% IF daywiseitin %]
+	<h2>Your Day-wise Itinerary</h2>
+	<table style="width: 100%;">
+		<thead>
+			<tr>
+				<th>Day</th>
+				<th>Date</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+		[% FOREACH day in daywiseitin %]
+			<tr>	
+				<td>[% loop.count %]</td>
+				<td width="23%">[% date.format(day.date, '%a, %d %b') %]</td>
+				<td>[% day.desc %]</td>
+			</tr>
+		[% END %]
+		</tbody>
+	</table>
+[% ELSE %]
+	<p>
+		You have yet to choose a destination. Your itinerary will be displayed 
+		as soon as you select your first destination.
+	</p>
+[% END %]	

@@ -47,13 +47,15 @@
 					<hr />
 				</div>
 				[% END %]
-				<h3>Or explore places further away &hellip;</h3>
+				<h3>Or explore places further away from [% session.status.src.city %]&hellip;</h3>
 				[% INCLUDE randomcities_form.tt %]
 			</div>
 			<div class="six columns">
-				<h2>Your Tour Summary</h2>
 				[% INCLUDE acco_quote.tt %]
+				[% INCLUDE day_wise_itin.tt %]
 			</div>
 		</div>
 	</div>
 </div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZio3-tNd89xE36fpkNaf4m4TYxXrg7Xs&sensor=false"></script>
+<script src="[% request.uri_base %]/javascripts/odyssey_map.js"></script>

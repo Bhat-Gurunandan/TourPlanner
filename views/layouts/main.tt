@@ -14,6 +14,9 @@
 	<link rel="stylesheet" href="[% request.uri_base %]/stylesheets/app.css">
 	<link rel="stylesheet" href="[% request.uri_base %]/stylesheets/ui-lightness/jquery-ui-1.9.2.custom.min.css">
 	<script src="[% request.uri_base %]/javascripts/modernizr.foundation.js"></script>
+	<!-- Included JS Files (Compressed) -->
+	<script src="[% request.uri_base %]/javascripts/foundation.min.js"></script>
+	<script src="[% request.uri_base %]/javascripts/jquery-ui-1.9.2.custom.min.js"></script>
 </head>
 <body>
 	<div class="contain-to-grid">
@@ -59,14 +62,8 @@
 	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.clearing.js"></script>
 	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.magellan.js"></script>
 	-->
-	<!-- Included JS Files (Compressed) -->
-	<script src="[% request.uri_base %]/javascripts/jquery.js"></script>
-	<script src="[% request.uri_base %]/javascripts/foundation.min.js"></script>
-	<script src="[% request.uri_base %]/javascripts/jquery-ui-1.9.2.custom.min.js"></script>
 	<!-- Initialize JS Plugins -->
 	<script src="[% request.uri_base %]/javascripts/app.js"></script>
 	<script src="[% request.uri_base %]/javascripts/odyssey.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZio3-tNd89xE36fpkNaf4m4TYxXrg7Xs&sensor=false"></script>
-	<script src="[% request.uri_base %]/javascripts/odyssey_map.js"></script>
 </body>
 </html>
