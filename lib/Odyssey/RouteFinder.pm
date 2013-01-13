@@ -14,6 +14,7 @@ use Exporter qw{import};
 our @EXPORT = qw{
 	routefinder
 	departuredate
+	departuretime
 	add_days_to_date
 };
 
@@ -119,7 +120,7 @@ sub departuredate {
 		time_zone => 'Asia/Kolkata'
 	});
 
-	my $dtstart = $strpt->parse_datetime($start. ' 00:00:00.000');
+	my $dtstart = $strpt->parse_datetime($start);
 
 	my $dtend = $strpt->parse_datetime($end);
 	$dtend = DateTime->new(
@@ -133,13 +134,29 @@ sub departuredate {
 
 	my $du = DateTime::Duration->new(days => $days);
 	$dtend->add_duration($du);
-	my $depdate = $dtend->strftime('%Y-%m-%d');
+	my $depdate = $dtend->strftime('%Y-%m-%d %H:%M:%S.000');
 	
 	my $delta = $dtend - $dtstart;
 	my $daynum = $delta->in_units('days');
 	
 	return ($daynum + 1, $depdate);
 } 
+
+sub departuretime {
+
+	my $start = shift;
+		
+	my $strpt = DateTime::Format::Strptime->new({
+		pattern => '%Y-%m-%d %H:%M:%S.000',
+		time_zone => 'Asia/Kolkata'
+	});
+	my $dtstart = $strpt->parse_datetime($start);
+	
+	my $du = DateTime::Duration->new(hours => 9);
+	$dtstart->add_duration($du);
+	
+	return $dtstart->strftime('%Y-%m-%d %H:%M:%S.000');
+}
 
 =head2 duration
 
@@ -168,6 +185,8 @@ sub duration {
 sub add_days_to_date {
 	
 	my ($start, $days) = @_;
+	
+	debug "Received strt time: $start";
 	
 	my $strpt = DateTime::Format::Strptime->new({
 		pattern => '%Y-%m-%d %H:%M:%S.000',

@@ -79,11 +79,11 @@ post '/diy' => sub {
 	# required so template toolkit can parse the date
 	my $dmd = Date::Manip::Date->new;
 	$dmd->parse($valid->{arrdate});
-	my $atstmp = $dmd->printf('%Y-%m-%d');
+	my $atstmp = $dmd->printf('%Y-%m-%d 00:00:00.000');
 
 	$dmd->new_date;
 	$dmd->parse($valid->{depdate});
-	my $dtstmp = $dmd->printf('%Y-%m-%d');
+	my $dtstmp = $dmd->printf('%Y-%m-%d 00:00:00.000');
 
 	
 	# Init session user
@@ -110,8 +110,8 @@ post '/diy' => sub {
 			lat			=> $lat,
 			lng			=> $lng,
 			daynum		=> 1,
-			date 		=> $atstmp . ' 00:00:00',
-			etd			=> $atstmp . ' 09:00:00',
+			date 		=> $atstmp,
+			etd			=> $atstmp,
 		},
 		dest => {
 			cityid			=> $valid->{startplace},
@@ -216,7 +216,7 @@ post '/transit' => sub {
 		hotelid => $hotelid,
 		hotel => $hotel,
 		arrdate => $route->{hops}[-1]{arrival},
-		depdate => $date . ' 00:00:00.000',
+		depdate => $date,
 		days => $days,
 	};
 		
@@ -228,8 +228,8 @@ post '/transit' => sub {
 			lat			=> $lat,
 			lng			=> $lng,
 			daynum		=> $daynum,
-			date 		=> $date . ' 00:00:00',
-			etd			=> $date . ' 09:00:00',
+			date 		=> $date,
+			etd			=> departuretime($date),
 		},
 		dest => {},
 	};
@@ -428,19 +428,25 @@ sub build_itinerary {
 		shift @itin;
 	}
 	else {
-		return;
+		return [];
 	}
+	
+	debug 'Itinerary: ' . to_dumper(\@itin);
 	
 	my ($date, $desc);
 	foreach (@itin) {
 		
+		
 		if ($_) {
 			
+			debug "Current Date: " . $_->{date};
 			$date = $_->{date};
 			$desc = $_->{cont};
 		}
 		else {
 			
+			debug "Current Date in else: " . $date;
+				
 			$date = add_days_to_date($date, 1);
 			$_ = {
 				date => $date,
