@@ -16,6 +16,7 @@ our @EXPORT = qw{
 	departuredate
 	departuretime
 	add_days_to_date
+	compare_dates
 };
 
 =head1 NAME
@@ -198,6 +199,21 @@ sub add_days_to_date {
 	$dtstart->add_duration($du);
 	
 	return $dtstart->strftime('%Y-%m-%d %H:%M:%S.000');
+}
+
+sub compare_dates {
+	
+	my ($from, $to) = @_;
+	
+	my $strpt = DateTime::Format::Strptime->new({
+		pattern => '%Y-%m-%d %H:%M:%S.000',
+		time_zone => 'Asia/Kolkata'
+	});
+
+	return DateTime->compare(
+		$strpt->parse_datetime($from)->truncate(to => 'day'),
+		$strpt->parse_datetime($to)->truncate(to => 'day')
+	);
 }
 
 =head1 AUTHOR

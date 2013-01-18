@@ -1,3 +1,8 @@
+<style>
+	tr.delayed td {
+		color: #ba0000;
+	}
+</style>
 [% IF daywiseitin %]
 	<h2>Your Day-wise Itinerary</h2>
 	<table style="width: 100%;">
@@ -10,7 +15,7 @@
 		</thead>
 		<tbody>
 		[% FOREACH day in daywiseitin %]
-			<tr>	
+			<tr[% IF day.delayed > 0 %] class="delayed"[% END %]>	
 				<td>[% loop.count %]</td>
 				<td width="23%">[% date.format(day.date, '%a, %d %b') %]</td>
 				<td>[% day.desc %]</td>

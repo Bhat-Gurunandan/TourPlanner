@@ -454,7 +454,8 @@ sub build_itinerary {
 	
 	debug 'Itinerary: ' . to_dumper(\@itin);
 	
-	my ($date, $desc);
+	my $enddate = $status->{config}{depdate};
+	my ($date, $desc, $delayed);
 	foreach (@itin) {
 		
 		
@@ -463,16 +464,32 @@ sub build_itinerary {
 			debug "Current Date: " . $_->{date};
 			$date = $_->{date};
 			$desc = $_->{cont};
+			$delayed = compare_dates($date, $enddate);
+			$_->{delayed} = $delayed; 
 		}
 		else {
 			
 			debug "Current Date in else: " . $date;
 				
 			$date = add_days_to_date($date, 1);
+			$delayed = compare_dates($date, $enddate);
 			$_ = {
 				date => $date,
 				desc => $desc,
+				delayed => $delayed,
 			};
+		}
+	}
+	
+	while ($delayed < 0) {
+		
+		$date = add_days_to_date($date, 1);
+		$delayed = compare_dates($date, $enddate);
+
+		push @itin, {
+			date => $date,
+			desc => 'Plan Pending',
+			delayed => $delayed,
 		}
 	}
 
