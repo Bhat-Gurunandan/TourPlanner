@@ -75,7 +75,7 @@ post '/diy' => sub {
 		};
 	}
 	
-	# We store all timestamps in YYYY-MM-DD HH24:MM:SS format
+	# All timestamps in YYYY-MM-DD HH24:MM:SS.000 format
 	# required so template toolkit can parse the date
 	my $dmd = Date::Manip::Date->new;
 	$dmd->parse($valid->{arrdate});
@@ -148,6 +148,10 @@ get '/explore/:city' => sub {
 	my $to		= $destid;
 	my $hpref 	= $status->{config}{hotelcategory};
 		
+	my $routes;
+	$routes = routefinder($from, $to, $status->{src}{etd})
+		unless ($from == $to);
+		 
 	my $citydetails = {
 
 		%{citydetails($to)},
@@ -155,7 +159,7 @@ get '/explore/:city' => sub {
 		defhotel 	=> defaulthotel($to, $hpref),
 		nearcities 	=> nearcities($from),
 		randomcities => randomcities(),
-		routes 		=> (my $routes = routefinder($from, $to, $status->{src}{etd})),
+		routes 		=> $routes,
 	};
 
 	# Update destination and routes.
@@ -177,45 +181,57 @@ post '/transit' => sub {
 	my $status = session('status');
 	
 	return redirect uri_for('diy') 
-		unless $status  && $status->{dest}{routes};
+		unless $status;
 
 	my $params = params;
-
-	my $city = $status->{dest}{city};
-	my (undef, $lat, $lng) = @{city($status->{dest}{cityid})};
-	
-	my $route = $status->{dest}{routes}[$params->{travelopts}];
-	
 	my $days = $params->{days};
+	my $trvlopts = $params->{travelopts};
+	my $hotelid = $params->{hotelid};
+
+	my $dest = $status->{dest};
+	my $city = $dest->{city};
+	
+	my (undef, $lat, $lng) = @{city($dest->{cityid})};
+	
+	my ($route, $arrtime);
+	if ($trvlopts) {
+		
+		$route = $dest->{routes}[$trvlopts];
+		$arrtime = $route->{hops}[-1]{arrival};
+	}
+	else {
+		
+		$arrtime = $status->{src}{etd};
+	}
+	
 	
 	# Get arrival daynum at destination
 	my ($arrdaynum, undef) = departuredate (
 		$status->{config}{arrdate},
-		$route->{hops}[-1]{arrival}, 
+		$arrtime, 
 		0
 	);
 	
 	# Get departure daynum from source
 	my ($daynum, $date) = departuredate (
 		$status->{config}{arrdate},
-		$route->{hops}[-1]{arrival}, 
+		$arrtime, 
 		$days
 	);
 	
-	my $hotelid = $params->{hotelid};
 	my $hotel = hotel($hotelid);
 	
 	push @{$status->{stops}}, {
 		src => $status->{src},
 		dest => {
-			%{$status->{dest}}, 
+			%$dest, 
 			routes => {},
 			daynum => $arrdaynum,
 		},
 		route => $route,
 		hotelid => $hotelid,
 		hotel => $hotel,
-		arrdate => $route->{hops}[-1]{arrival},
+		arrdate => $arrtime,
 		depdate => $date,
 		days => $days,
 	};
@@ -395,10 +411,15 @@ sub build_itinerary {
 		my $dest = $_->{dest};
 
 		$itin[$src->{daynum}]->{desc} = $itin[$src->{daynum}]->{desc} || '';
+		
+		my $depnotice = $src->{cityid} == $dest->{cityid} ? 
+			'': 
+			'Depart ' . $src->{city} . ' for ' . $dest->{city} . '. ';
+			
 		$itin[$src->{daynum}] = {
 			
 			date => $src->{date},
-			desc => $itin[$src->{daynum}]->{desc} . 'Depart ' . $src->{city} . ' for ' . $dest->{city} . '. ',
+			desc =>  $depnotice . $itin[$src->{daynum}]->{desc},
 			cont => 'In Transit', 
 		};
 		

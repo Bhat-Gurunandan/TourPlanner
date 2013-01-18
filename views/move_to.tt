@@ -53,7 +53,6 @@
 							</label>
 							[% END %]
 						</p>
-						<p>Here is our recommended way to travel <strong>from [% session.status.src.city %] to [% city %]:</strong></p>
 						[% INCLUDE route_options.tt %]
 					</fieldset>
 					<input type="submit" class="button" value="Take me to [% city %]" /></p>

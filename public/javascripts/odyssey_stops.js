@@ -19,22 +19,27 @@ $(document).ready(function(){
 
 		console.log(stops);
 		
+		var lastCity = '';
+		var stopNum = 1;		
 		for(i = 0; i < stops; ++i) {
 			
 			console.log(data[i]);
 			
-			var stopNum = i + 1;
+			if (data[i].city == lastCity) continue;
+			
 			
 			var mLtLn = new google.maps.LatLng(data[i].lat, data[i].lng);
 			var mOpts = {
 				map: map,
 				position: mLtLn,
-				title: 'Stop ' + (i + 1) + ' in ' + data[i].city,
+				title: 'Stop ' + stopNum + ' in ' + data[i].city,
 				icon: '/images/mapmarkers/iconb' + stopNum + '.png'
 			};
 			
 			var mMrkr = new google.maps.Marker(mOpts);
 			mapBounds.extend(mLtLn);
+			++stopNum;
+			lastCity = data[i].city;
 		}
 	
 		map.fitBounds(mapBounds);
