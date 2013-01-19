@@ -44,11 +44,13 @@
 					</p>
 					<p class="desc">[% city.writeup | $AddPTags | $FirstPara %]</p>
 					<p><a href="[% request.usr_base %]/explore/[% city.city %]">Explore [% city.city %] &raquo;</a></p>
-					<hr />
+					<hr />					
 				</div>
 				[% END %]
 				<h3>Or explore places further away from [% session.status.src.city %]&hellip;</h3>
 				[% INCLUDE randomcities_form.tt %]
+				<p>Or <a href="/end_tour">End my tour now</a> at [% session.status.src.city %]</p>					
+				
 			</div>
 			<div class="six columns">
 				[% INCLUDE day_wise_itin.tt %]
