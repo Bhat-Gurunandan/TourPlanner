@@ -51,8 +51,9 @@
 				[% INCLUDE randomcities_form.tt %]
 			</div>
 			<div class="six columns">
-				[% INCLUDE acco_quote.tt %]
 				[% INCLUDE day_wise_itin.tt %]
+				<hr />
+				[% INCLUDE acco_quote.tt %]
 			</div>
 		</div>
 	</div>

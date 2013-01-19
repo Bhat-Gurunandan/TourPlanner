@@ -488,7 +488,7 @@ sub build_itinerary {
 
 		push @itin, {
 			date => $date,
-			desc => 'Plan Pending',
+			desc => ($delayed == 0) ? 'Departure Date' : 'Plan Pending',
 			delayed => $delayed,
 		}
 	}

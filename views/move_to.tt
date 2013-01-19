@@ -14,9 +14,9 @@
 			<p>
 				<a href="#" data-reveal-id="todos" data-animation="fade"><strong>Things to see and do in [% city %]</strong></a>
 				<br />
-				<a href="#" data-reveal-id="citywise-itin" data-animation="fade"><strong>View your city-wise itinerary</strong></a>
-				<br />
 				<a href="#" data-reveal-id="daywise-itin" data-animation="fade"><strong>View your day-wise itinerary</strong></a>
+				<br />
+				<a href="#" data-reveal-id="citywise-itin" data-animation="fade"><strong>View your city-wise itinerary</strong></a>
 			</p>
 		</div>
 	</div>
