@@ -3,8 +3,7 @@
 		color: #ba0000;
 	}
 </style>
-[% IF daywiseitin %]
-	<h2>Your Day-wise Itinerary</h2>
+[% IF daywiseitin.size > 0 %]
 	<table style="width: 100%;">
 		<thead>
 			<tr>

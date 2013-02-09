@@ -295,6 +295,16 @@ get '/stops' => sub {
 	return to_json(\@cities);
 };
 
+get '/end_tour' => sub {
+	
+	template end_tour => {daywiseitin => build_itinerary()};
+};
+
+post '/end_tour' => sub {
+	
+	template thank_you => {daywiseitin => build_itinerary()};
+};
+
 sub validate_diy {
 	
 	my $inp = shift;
@@ -398,13 +408,16 @@ sub build_accoquote {
 sub build_itinerary {
 	
 	my $status = session('status');
+	
 	return unless
 		$status && (my $stops = $status->{stops});
 	
 	my @itin = ();
 	my ($depdaynum, $depdate, $depcity, $days);
 	my @stops = @{$stops};
-	
+
+	debug to_dumper($stops);
+		
 	foreach (@stops) {
 		
 		my $src = $_->{src};
@@ -452,8 +465,6 @@ sub build_itinerary {
 		return [];
 	}
 	
-	debug 'Itinerary: ' . to_dumper(\@itin);
-	
 	my $enddate = $status->{config}{depdate};
 	my ($date, $desc, $delayed);
 	foreach (@itin) {
@@ -493,6 +504,8 @@ sub build_itinerary {
 		}
 	}
 
+	debug 'Itinerary: ' . to_dumper(\@itin);
+	
 	return \@itin;	
 }
 

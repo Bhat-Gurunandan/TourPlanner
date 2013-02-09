@@ -53,9 +53,20 @@
 				
 			</div>
 			<div class="six columns">
-				[% INCLUDE day_wise_itin.tt %]
-				<hr />
-				[% INCLUDE acco_quote.tt %]
+				<ul class="accordion">
+					<li class="active">
+    					<div class="title"><h5>Day-wise Itinerary</h5></div>
+						<div class="content">
+							[% INCLUDE day_wise_itin.tt %]
+						</div>
+					</li>
+					<li>
+    					<div class="title"><h5>City-wise Itinerary</h5></div>
+						<div class="content">
+							[% INCLUDE acco_quote.tt %]
+						</div>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</div>

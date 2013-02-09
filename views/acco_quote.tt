@@ -1,5 +1,4 @@
 [% IF session.status.stops.size > 0 %]
-<h2>Your City-wise Tour Summary</h2>
 <table>
 	<thead>
 		<tr>

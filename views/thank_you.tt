@@ -1,0 +1,19 @@
+[% USE date %]
+<div class="content">
+	<div class="row">
+		<div class="twelve columns">
+			<div class="six columns">
+				<h2>Thank you [% session.status.config.leadname %]</h2>
+				<hr />
+				<p>
+					You will hear from us shortly.
+				<p>
+			</div>
+			<div class="six columns">
+				[% INCLUDE day_wise_itin.tt %]
+				<hr />
+				[% INCLUDE acco_quote.tt %]
+			</div>
+		</div>
+	</div>
+</div>
