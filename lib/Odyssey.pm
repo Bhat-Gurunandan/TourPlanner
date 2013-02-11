@@ -7,9 +7,10 @@ use Date::Manip::Date;
 use Data::Dumper;
 
 use DateTime::Format::Strptime;
-	  
+
 use Odyssey::MemcacheDB;;
 use Odyssey::RouteFinder;
+use Odyssey::Quotation;
 
 our $VERSION = '0.1';
 
@@ -80,43 +81,49 @@ post '/diy' => sub {
 	my $dmd = Date::Manip::Date->new;
 	$dmd->parse($valid->{arrdate});
 	my $atstmp = $dmd->printf('%Y-%m-%d 00:00:00.000');
-
+	
 	$dmd->new_date;
 	$dmd->parse($valid->{depdate});
 	my $dtstmp = $dmd->printf('%Y-%m-%d 00:00:00.000');
-
+	my $tourlength = duration_days($atstmp, $dtstmp);
 	
-	# Init session user
+	my $valid_data = {
+		leadname		=> $valid->{leadname},
+		pax				=> $valid->{pax},
+		hotelcategory	=> $valid->{hotelcategory},
+		single			=> $valid->{single},
+		double			=> $valid->{double},
+		twin			=> $valid->{twin},
+		arrdate			=> $atstmp,
+		arrplace		=> $valid->{arrplace},
+		startplace		=> $valid->{startplace},
+		depdate			=> $dtstmp,
+		depplace		=> $valid->{depplace},
+		tourlength 		=> $tourlength,
+	};
+	
+	my $quote = Odyssey::Quotation->new($valid_data);
+	
 	my ($currcity, $lat, $lng) = @{city($valid->{arrplace})};
 	my ($city) = @{city($valid->{startplace})};
 
+	# Init session
 	session status => {
-		config => {
-			leadname		=> $valid->{leadname},
-			pax				=> $valid->{pax},
-			hotelcategory	=> $valid->{hotelcategory},
-			single			=> $valid->{single},
-			double			=> $valid->{double},
-			twin			=> $valid->{twin},
-			arrdate			=> $atstmp,
-			arrplace		=> $valid->{arrplace},
-			startplace		=> $valid->{startplace},
-			depdate			=> $dtstmp,
-			depplace		=> $valid->{depplace},
-		},
+		config => $valid_data,
+		quote => $quote,
 		src => {
-			cityid		=> $valid->{arrplace},
-			city		=> $currcity,
-			lat			=> $lat,
-			lng			=> $lng,
-			daynum		=> 1,
-			date 		=> $atstmp,
-			etd			=> $atstmp,
+			cityid	=> $valid->{arrplace},
+			city	=> $currcity,
+			lat		=> $lat,
+			lng		=> $lng,
+			daynum	=> 1,
+			date 	=> $atstmp,
+			etd		=> $atstmp,
 		},
 		dest => {
-			cityid			=> $valid->{startplace},
-			city			=> $city,
-			routes			=> []
+			cityid	=> $valid->{startplace},
+			city	=> $city,
+			routes	=> []
 		},
 		stops => [],
 	};
@@ -158,7 +165,7 @@ get '/explore/:city' => sub {
 		hotels 		=> cityhotels($to),
 		defhotel 	=> defaulthotel($to, $hpref),
 		nearcities 	=> nearcities($from),
-		randomcities => randomcities(),
+		randomcities => randomcities($from, $to),
 		routes 		=> $routes,
 	};
 
@@ -257,10 +264,8 @@ get '/explore_around/:city' => sub {
 	
 	# Go to DIY Form if no session and non-existent city
 	my $status = session('status');
-	debug to_dumper($status);
 	
 	my $city = param 'city';
-
 	return redirect uri_for('diy') 
 		unless (
 			$status &&
@@ -272,11 +277,10 @@ get '/explore_around/:city' => sub {
 	
 
 	my $itin = build_itinerary();
-	debug 'Itinerary: ' . to_dumper($itin);
 
 	template move_on => {
 		cities => $options, 
-		randomcities => randomcities(),
+		randomcities => randomcities($cityid),
 		daywiseitin => build_itinerary(),
 	};	
 };
@@ -416,8 +420,6 @@ sub build_itinerary {
 	my ($depdaynum, $depdate, $depcity, $days);
 	my @stops = @{$stops};
 
-	debug to_dumper($stops);
-		
 	foreach (@stops) {
 		
 		my $src = $_->{src};
@@ -472,7 +474,6 @@ sub build_itinerary {
 		
 		if ($_) {
 			
-			debug "Current Date: " . $_->{date};
 			$date = $_->{date};
 			$desc = $_->{cont};
 			$delayed = compare_dates($date, $enddate);
@@ -480,8 +481,6 @@ sub build_itinerary {
 		}
 		else {
 			
-			debug "Current Date in else: " . $date;
-				
 			$date = add_days_to_date($date, 1);
 			$delayed = compare_dates($date, $enddate);
 			$_ = {
@@ -504,8 +503,6 @@ sub build_itinerary {
 		}
 	}
 
-	debug 'Itinerary: ' . to_dumper(\@itin);
-	
 	return \@itin;	
 }
 

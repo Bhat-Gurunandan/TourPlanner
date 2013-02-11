@@ -204,7 +204,7 @@ sub nearcities {
 sub randomcities {
 
 	my $key = "randomcities";
-	return memcached_get_or_set($key, sub {
+	my $rndcities = memcached_get_or_set($key, sub {
 
 		my $rcqry = "select distinct
 				cities.cities_id,
@@ -227,6 +227,21 @@ sub randomcities {
 		$rcsth->finish;
 	
 		return $rndcities;
+	});
+	
+	$key = $key . ':' . join(':', @_);
+
+	my $cityid = $_[0];
+	my %seen = map { $_ => 1 } @_;
+	foreach (@{nearcities($cityid)}) {
+		$seen{$_->{cities_id}} = 1;
+	}		
+		
+	return memcached_get_or_set($key, sub {
+		
+		my @rndcities = grep { ! exists $seen{$_->{cities_id}} } @$rndcities;
+		
+		return \@rndcities;
 	});
 }
 
@@ -271,6 +286,7 @@ sub cityhotels {
 				wh.hotel,
 				wh.description,
 				wh.category,
+				wh.categoryname,
 				dh.addressbook_id isdefault
 			from (select
 					h.addressbook_id hotel_id,
@@ -283,7 +299,13 @@ sub cityhotels {
 						when 22 then 20 
 						when 8 then 30 
 						when 35 then 40 
-					end as category
+					end as category,
+					case a2.categories_id 
+						when 23 then 'Standard' 
+						when 22 then 'Superior' 
+						when 8 then 'Luxury' 
+						when 35 then 'Top of Line' 
+					end as categoryname
 					from
 						vw_hoteldetails h,
 						addresscategories a1,

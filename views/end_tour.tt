@@ -12,8 +12,11 @@
 						back to you at the earliest.
 					<p>
 					<p>
-						<label for="leademail">
 						<input type="text" name="leademail" id="leademail" placeholder="Your email" />
+					</p>
+					<p>
+						<label for="leadcomments">Add your comments/feedback here</label>
+						<textarea id="leadcomments" name="leadcomments" rows="10"></textarea>
 					</p>
 					<p>
 						<input type="submit" class="button" name="contactme" value="Contact Me">

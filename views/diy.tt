@@ -4,8 +4,7 @@
 		<p>
 			We have created a unique Travel Wizard that lets you put together a customised tour online. You simply 
 			choose the places you wish to visit, and select your preferred mode of transport. Our Travel Wizard 
-			then creates a suggested itinerary with a costing. You are able to amend the proposed itinerary to 
-			arrive at a program of your choice.
+			then creates a suggested itinerary of your choice.
 		</p>
 		<p>Take your time and enjoy your trip.</p>
 		<h4>A Few Questions before we begin&hellip;</h4>
@@ -133,7 +132,7 @@
 					flight may land in Chennai but you may want to spend the night in nearby Mamallapuram.
 				</p>
 				<div class="row">
-					<div class="three columns offset-by-three">				
+					<div class="four columns offset-by-three">				
 						<label for="startplace" class="right inline">Start Tour From (City):</label>
 					</div>
 					<div class="three columns end">

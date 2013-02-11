@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="twelve columns">
 			<div class="eight columns">
-				<div id="gmap" style="width: 100%; height: 400px;"></div>
+				<div id="gmap" style="width: 100%; height: 470px;"></div>
 			</div>
 			<div class="four columns">
 				<h1>Your Tour Status</h2>
@@ -21,10 +21,10 @@
 					The map on the left, highlights destinations (red map markers) we recommend. Below the map, we have listed these destinations
 					with a note on what makes each of these special. 
 				</p>
-				<p>
-					If you prefer to explore destinations further away, select one from the dropdown below and click on "Go"
-				</p>
-				[% INCLUDE randomcities_form.tt %]
+				<div class="panel">
+					<p>If you prefer to explore destinations further away, select one from the dropdown below and click on "Go"</p>
+					[% INCLUDE randomcities_form.tt %]
+				</div>
 			</div>
 			<hr />
 		</div>
@@ -44,13 +44,9 @@
 					</p>
 					<p class="desc">[% city.writeup | $AddPTags | $FirstPara %]</p>
 					<p><a href="[% request.usr_base %]/explore/[% city.city %]">Explore [% city.city %] &raquo;</a></p>
-					<hr />					
+					[% IF ! loop.last %]<hr />[% END %]					
 				</div>
 				[% END %]
-				<h3>Or explore places further away from [% session.status.src.city %]&hellip;</h3>
-				[% INCLUDE randomcities_form.tt %]
-				<p>Or <a href="/end_tour">End my tour now</a> at [% session.status.src.city %]</p>					
-				
 			</div>
 			<div class="six columns">
 				<ul class="accordion">
@@ -68,8 +64,30 @@
 					</li>
 				</ul>
 			</div>
+			<hr />
 		</div>
 	</div>
+	<div class="row">
+		<div class="twelve columns">
+			<div class="six columns">
+				<div class="panel" style="height: 14em;">
+					<p>Or explore places further away from [% session.status.src.city %]&hellip;</p>
+					[% INCLUDE randomcities_form.tt %]
+				</div>
+			</div>
+			<div class="six columns end">
+				<div class="panel" style="height: 14em;">
+					<p>Or end my tour at [% session.status.src.city %]</p>
+					<p>
+						You can end your tour and confirm your itinerary on the conformation page. 
+						We would be happy to make any changes to your itinerary after we recieve it. 
+					</p>
+					<p>Yes. <a href="/end_tour">End my tour now</a> at [% session.status.src.city %]</p>
+				</div>
+			</div>
+			<hr />
+		</div>
+	</div>					
 </div>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZio3-tNd89xE36fpkNaf4m4TYxXrg7Xs&sensor=false"></script>
 <script src="[% request.uri_base %]/javascripts/odyssey_map.js"></script>

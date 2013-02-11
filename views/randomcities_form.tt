@@ -13,5 +13,5 @@
 		[% END %]
 		</ul>
 	</div>			 	
-	<input type="submit" class="button alert" value="Go!" />
+	<input type="submit" class="button" value="Go!" />
 </form>

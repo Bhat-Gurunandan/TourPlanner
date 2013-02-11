@@ -17,6 +17,7 @@ our @EXPORT = qw{
 	departuretime
 	add_days_to_date
 	compare_dates
+	duration_days
 };
 
 =head1 NAME
@@ -182,12 +183,24 @@ sub duration {
 	return "$hours hours";
 }
 
+sub duration_days {
+	
+	my ($start, $end) = @_;
+
+	my $strpt = DateTime::Format::Strptime->new({
+		pattern => '%Y-%m-%d %H:%M:%S.000',
+		time_zone => 'Asia/Kolkata'
+	});
+	my $dtstart = $strpt->parse_datetime($start);
+	my $dtend = $strpt->parse_datetime($end);
+	my $duration = $dtstart->delta_days($dtend);
+
+	return $duration->{days};
+}
 
 sub add_days_to_date {
 	
 	my ($start, $days) = @_;
-	
-	debug "Received strt time: $start";
 	
 	my $strpt = DateTime::Format::Strptime->new({
 		pattern => '%Y-%m-%d %H:%M:%S.000',
