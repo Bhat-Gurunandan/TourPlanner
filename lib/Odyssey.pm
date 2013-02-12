@@ -36,7 +36,7 @@ get '/diy' => sub {
 		double => 1,
 		arrplace => 103,
 		depplace => 103,
-		startplace => 2,
+		startplace => 103,
 	};
 	
 	template diy => {
@@ -155,7 +155,7 @@ get '/explore/:city' => sub {
 	my $to		= $destid;
 	my $hpref 	= $status->{config}{hotelcategory};
 		
-	my $routes;
+	my $routes = [];
 	$routes = routefinder($from, $to, $status->{src}{etd})
 		unless ($from == $to);
 		 

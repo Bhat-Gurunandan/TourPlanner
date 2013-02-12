@@ -1,4 +1,4 @@
-[% IF routes %]
+[% IF routes.size > 0 %]
 	<p>Here is our recommended way to travel <strong>from [% session.status.src.city %] to [% session.status.dest.city %]:</strong></p>
 	[% FOREACH route IN routes %]
 	<div class="row">

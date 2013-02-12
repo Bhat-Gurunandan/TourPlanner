@@ -1,4 +1,5 @@
  <form method="post" action="[% request.uri_base %]/explore" class="custom">
+ 	<label for="rcity">Select a City:</label>
 	<select style="display:none;" id="rcity" name="rcity">
 	[% FOREACH rcity in randomcities %]
 		<option value="[% rcity.city %]" [% IF loop.first %]selected="selected"[% END %]>[% rcity.city %]</option>

@@ -66,10 +66,14 @@
 			<div class="eight columns">
 				<form method=post action="[% request.uri_base %]/transit" class="custom">
 					<fieldset>
-						<legend style="background: none;"><h5>Yes, make [% city %] my next destination.</h5></legend>
-						<h6>Choose your Stay and Travel Options in [% city %]</h6>
+						[% IF session.status.dest.routes.size == 0 %]
+							<legend style="background: none;"><h5>Your stay in [% city %]</h5></legend>
+						[% ELSE %]
+							<legend style="background: none;"><h5>Yes, make [% city %] my next destination.</h5></legend>
+							<h6>Choose your Stay and Travel Options in [% city %]</h6>
+						[% END %]
 						<p>
-							If you want to visit [% city %] please enter your preferences here. We have chosen the 
+							Choose preferences for your stay in [% city %]. We have chosen the 
 							best options for you. Feel free to change them if you wish and click on "Take me to [% city %]".
 						</p>
 						<div class="row">
@@ -126,8 +130,13 @@
 					<h2>Your Tour Status Today</h2>
 					<p>
 						Today is <strong>[% date.format(session.status.src.date, '%a, %d %b %Y') %] - Day [% session.status.src.daynum %]</strong> of your Tour.
-						You are currently in <strong>[% session.status.src.city %]</strong> and ready to leave.
-						You are considering <strong>[% city %]</strong> as your next destination
+						[% IF session.status.dest.routes.size == 0 %]
+							You are starting your tour in <strong>[% session.status.src.city %]</strong>.
+							Please select your hotel and the number of nights you wish to stay.
+						[% ELSE %] 
+							You are currently in <strong>[% session.status.src.city %]</strong> and ready to leave.
+							You are considering <strong>[% city %]</strong> as your next destination
+						[% END %]
 					</p>
 					<div id="gmap" style="height: 400px; width: 100%"></div>
 					<p class="small">
