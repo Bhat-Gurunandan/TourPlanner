@@ -12,6 +12,9 @@
 						back to you at the earliest.
 					<p>
 					<p>
+						Your Quotation ID is: [% qid %]
+					</p>
+					<p>
 						<input type="text" name="leademail" id="leademail" placeholder="Your email" />
 					</p>
 					<p>

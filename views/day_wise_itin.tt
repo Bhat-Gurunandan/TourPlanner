@@ -9,7 +9,7 @@
 			<tr>
 				<th>Day</th>
 				<th>Date</th>
-				<th>Description</th>
+				<th>City</th>
 			</tr>
 		</thead>
 		<tbody>

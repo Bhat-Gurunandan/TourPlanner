@@ -26,7 +26,7 @@
 			}
 			else {
 				
-				str = 'You will have added ' +  -dbal + ' day(s) to your original ' +
+				str = 'You will have added ' +  (0 - dbal) + ' day(s) to your original ' +
 					'plan if you choose this option. Feel free to continue adding ' +
 					'days and we will adjust the duration of your tour when we build ' + 
 					'your itinerary';

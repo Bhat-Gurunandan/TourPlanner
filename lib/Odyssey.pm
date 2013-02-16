@@ -10,7 +10,7 @@ use DateTime::Format::Strptime;
 
 use Odyssey::MemcacheDB;;
 use Odyssey::RouteFinder;
-use Odyssey::Quotation;
+use Odyssey::DBQuotation;
 
 our $VERSION = '0.1';
 
@@ -102,15 +102,12 @@ post '/diy' => sub {
 		tourlength 		=> $tourlength,
 	};
 	
-	my $quote = Odyssey::Quotation->new($valid_data);
-	
 	my ($currcity, $lat, $lng) = @{city($valid->{arrplace})};
 	my ($city) = @{city($valid->{startplace})};
 
 	# Init session
 	session status => {
 		config => $valid_data,
-		quote => $quote,
 		src => {
 			cityid	=> $valid->{arrplace},
 			city	=> $currcity,
@@ -201,7 +198,7 @@ post '/transit' => sub {
 	my (undef, $lat, $lng) = @{city($dest->{cityid})};
 	
 	my ($route, $arrtime);
-	if ($trvlopts) {
+	if (defined $trvlopts) {
 		
 		$route = $dest->{routes}[$trvlopts];
 		$arrtime = $route->{hops}[-1]{arrival};
@@ -210,7 +207,6 @@ post '/transit' => sub {
 		
 		$arrtime = $status->{src}{etd};
 	}
-	
 	
 	# Get arrival daynum at destination
 	my ($arrdaynum, undef) = departuredate (
@@ -256,7 +252,9 @@ post '/transit' => sub {
 		},
 		dest => {},
 	};
-	
+
+	debug to_dumper(session('status')->{stops});
+		
 	return redirect(uri_for('/explore_around/' . $city));
 };
 
@@ -301,7 +299,18 @@ get '/stops' => sub {
 
 get '/end_tour' => sub {
 	
-	template end_tour => {daywiseitin => build_itinerary()};
+	my $qid = create_quotation();
+
+	# Save Quotation
+	my $status = session('status');
+	$status->{config}{quotationid} = $qid;
+	
+	session('status', $status);
+	
+	template end_tour => {
+		qid => $qid,
+		daywiseitin => build_itinerary(),
+	};
 };
 
 post '/end_tour' => sub {

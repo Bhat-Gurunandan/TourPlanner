@@ -61,6 +61,23 @@ sub routefinder {
 	
 	$tstmp = database->quote($tstmp);
 	my $qry = "exec p_RouteFinder_x $tstmp, $from, $to, 3, 1, null";
+
+# Returns:	
+	# options_id (serial)
+	# optionno (serial within an option)
+	# fromcities_id
+	# tocities_id
+	# fromcity (name)
+	# tocity (name)
+	# mode (mode id)
+	# modestr ("Train", "Car", "Air" etc.) 
+	# modeno ("Car" or Flight No "IC 234", null for train)
+	# trainno (Train Number "1245")
+	# departure (timestamp)
+	# arrival (timestamp)
+	# maxoption (?)
+	# hops
+	# modepreference (Sort Order?)
 	
 	my $rtsth = database->prepare($qry);
 	$rtsth->execute;
@@ -96,6 +113,9 @@ sub routefinder {
 			trainno => $row->{trainno},
 			departure => $row->{departure},
 			arrival => $row->{arrival},
+			overnight => _is_overnight($row->{departure}, $row->{arrival}),
+			hops => $row->{hops},
+			modepreference => $row->{modepreference},
 		};
 
 		$previdx = $idx
@@ -227,6 +247,12 @@ sub compare_dates {
 		$strpt->parse_datetime($from)->truncate(to => 'day'),
 		$strpt->parse_datetime($to)->truncate(to => 'day')
 	);
+}
+
+sub _is_overnight {
+	
+	my ($from, $to) = @_;
+	return (compare_dates($from, $to) != 0)	? 1 : 0;
 }
 
 =head1 AUTHOR
