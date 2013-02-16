@@ -1,0 +1,11 @@
+[% IF report.size > 0 %]
+[% FOREACH day in report %]
+	<p>
+		<strong>
+			Day [% day.DayNo %] ([% date.format(day.QuoDate, '%a, %d %b %Y') %]), [% day.City %]
+		</strong>
+		<br />
+		[% day.String %]
+	</p>
+[% END %]
+[% END %] 

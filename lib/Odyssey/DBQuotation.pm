@@ -10,6 +10,8 @@ use Dancer::Plugin::Database;
 use Exporter qw{import};
 our @EXPORT = qw{
 	create_quotation
+	build_quotation
+	generate_itinerary
 };
 
 
@@ -76,6 +78,7 @@ sub create_quotation {
 			foreach (@$hops) {
 				
 				my $quo_tickets = {
+					qid => $id,
 					qcid => $qcid,
 					traveldate => $_->{departure},
 					from_cities_id => $_->{fromcities_id},
@@ -96,6 +99,7 @@ sub create_quotation {
 		if (defined $_->{hotelid}) {
 
 			my $quo_accomodation = {
+				qid => $id,
 				qcid => $qcid,
 				datein => $_->{arrdate},
 				hoteladdressbook_id => $_->{hotelid},
@@ -147,6 +151,7 @@ sub _create_quotation_tickets {
 	my $qry = "insert into 
 		quotickets (
 			quotickets_id,
+			quotations_id,
 			quocities_id,
 			traveldate,
 			from_cities_id,
@@ -159,11 +164,12 @@ sub _create_quotation_tickets {
 			modepreference
 		)
 		values (
-			?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+			?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 		)";
 	my $sth = database->prepare($qry);
 	$sth->execute(
 		$id,
+		$data->{qid},
 		$data->{qcid},
 		$data->{traveldate},
 		$data->{from_cities_id},
@@ -188,17 +194,19 @@ sub _create_quotation_accommodation {
 	my $qry = "insert into
 		quoaccommodation (
 			quoaccommodation_id,
+			quotations_id,
 			quocities_id,
 			datein,
 			hoteladdressbook_id,
 			nights
 		)
 		values (
-			?, ?, ?, ?, ?
+			?, ?, ?, ?, ?, ?
 		);";
 	my $sth = database->prepare($qry);
 	$sth->execute(
 		$id,
+		$data->{qid},
 		$data->{qcid},
 		$data->{datein},
 		$data->{hoteladdressbook_id},
@@ -206,6 +214,37 @@ sub _create_quotation_accommodation {
 	);
 	
 	return $id;
+}
+
+sub build_quotation {
+	
+	my $qid = shift;
+
+	my $qry = "exec p_AutoCompleteData $qid";
+	my $sth_ac = database->prepare($qry);
+	$sth_ac->execute;
+	$sth_ac->finish;
+	
+	# debug to_dumper( $sth_ac->fetchall_arrayref({}) );
+	
+	$qry = "exec p_AutoExecuteAll $qid";
+	my $sth_ae = database->prepare($qry);
+	$sth_ae->execute;
+	$sth_ae->finish;
+	
+	# debug to_dumper( $sth_ae->fetchall_arrayref({}) );
+		
+}
+
+sub generate_itinerary {
+	
+	my $qid = shift;
+	
+	my $qry = "exec p_Rpt_DetailedItinerary2 $qid, 2";
+	my $sth_ac = database->prepare($qry);
+	$sth_ac->execute;
+	
+	return $sth_ac->fetchall_arrayref( {} );
 }
 
 # Generate next id for a table
@@ -226,5 +265,7 @@ sub _get_nextID {
 	
 	return 1 + $row->[0];
 }
+
+
 
 1;

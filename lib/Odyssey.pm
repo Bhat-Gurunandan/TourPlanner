@@ -304,11 +304,15 @@ get '/end_tour' => sub {
 	# Save Quotation
 	my $status = session('status');
 	$status->{config}{quotationid} = $qid;
-	
 	session('status', $status);
 	
+	build_quotation($qid);
+	my $rpt = generate_itinerary($qid);
+	
+	debug to_dumper($rpt);
+	
 	template end_tour => {
-		qid => $qid,
+		report => $rpt,
 		daywiseitin => build_itinerary(),
 	};
 };

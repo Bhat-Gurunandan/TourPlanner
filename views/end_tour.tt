@@ -2,9 +2,18 @@
 <div class="content">
 	<div class="row">
 		<div class="twelve columns">
+			<h3>Thank you [% session.status.config.leadname %]</h3>
+			<hr />
+		</div>
+	</div>
+	<div class="row">
+		<div class="twelve columns">
 			<div class="six columns">
-				<h2>Thank you [% session.status.config.leadname %]</h2>
-				<hr />
+				<h3>Your Tour Itinerary</h3>
+				[% INCLUDE backoffice_report.tt %]
+				 <hr />
+			</div>
+			<div class="six columns">
 				<form method=post action="[% request.uri_base %]/end_tour" class="custom">
 					<p>
 						We appreciate your decision to travel to India with us. Your itineraries are
@@ -25,11 +34,7 @@
 						<input type="submit" class="button" name="contactme" value="Contact Me">
 					</p>
 				</form>
-			</div>
-			<div class="six columns">
-				[% INCLUDE day_wise_itin.tt %]
 				<hr />
-				[% INCLUDE acco_quote.tt %]
 			</div>
 		</div>
 	</div>
