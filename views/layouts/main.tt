@@ -23,7 +23,7 @@
 		<nav class="top-bar">
 			<section>
 				<ul class="right">
-					<li><a href="#">Home</a></li>
+					<li><a href="/">Home</a></li>
 					<li><a href="#">Incredible India</a></li>
 					<li><a href="#">Special Places</a></li>
 					<li><a href="#">Mini Itineraries</a></li>
@@ -38,7 +38,6 @@
 	<div class="row">
 		<div class="twelve columns">
 			<h2>Travellers Palm</h2>
-			<p>This is version <strong>3.2.3</strong> generated on December 16, 2012.</p>
 			<hr />
 		</div>
 	</div>

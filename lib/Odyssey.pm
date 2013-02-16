@@ -441,13 +441,13 @@ sub build_itinerary {
 		$itin[$src->{daynum}]->{desc} = $itin[$src->{daynum}]->{desc} || '';
 		
 		my $depnotice = $src->{cityid} == $dest->{cityid} ? 
-			'': 
+			undef: 
 			'Depart ' . $src->{city} . ' for ' . $dest->{city} . '. ';
 			
 		$itin[$src->{daynum}] = {
 			
 			date => $src->{date},
-			desc =>  $depnotice . $itin[$src->{daynum}]->{desc},
+			desc =>  $depnotice || $itin[$src->{daynum}]->{desc},
 			cont => 'In Transit', 
 		};
 		
@@ -455,8 +455,8 @@ sub build_itinerary {
 		$itin[$dest->{daynum}] = {
 
 			date => $_->{arrdate}, 
-			desc => $itin[$dest->{daynum}]->{desc} . 'Arrive in ' . $dest->{city} . '. ',
-			cont => 'Stay at ' . $_->{hotel},
+			desc => $itin[$dest->{daynum}]->{desc} || $dest->{city} . '.',
+			cont => $dest->{city},
 		};
 		
 		$depdate = $_->{depdate};
