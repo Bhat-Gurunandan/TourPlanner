@@ -1,8 +1,9 @@
 package Odyssey::DBQuotation;
 
-use 5.006;
 use strict;
 use warnings FATAL => 'all';
+
+use feature qw{switch};
 
 use Dancer qw{:syntax};
 use Dancer::Plugin::Database;
@@ -80,10 +81,12 @@ sub create_quotation {
 				my $quo_tickets = {
 					qid => $id,
 					qcid => $qcid,
+					etd => $_->{departure},
+					eta => $_->{arrival},
 					traveldate => $_->{departure},
 					from_cities_id => $_->{fromcities_id},
 					to_cities_id => $_->{tocities_id},
-					tickets_id => $_->{mode},
+					tickets_id => _get_ticketsid( $_->{mode} ),
 					flightno => $_->{modeno},
 					trainno => $_->{trainno},
 					overnight => $_->{overnight},
@@ -153,6 +156,8 @@ sub _create_quotation_tickets {
 			quotickets_id,
 			quotations_id,
 			quocities_id,
+			etd,
+			eta,
 			traveldate,
 			from_cities_id,
 			to_cities_id,
@@ -164,13 +169,15 @@ sub _create_quotation_tickets {
 			modepreference
 		)
 		values (
-			?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+			?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 		)";
 	my $sth = database->prepare($qry);
 	$sth->execute(
 		$id,
 		$data->{qid},
 		$data->{qcid},
+		$data->{etd},
+		$data->{eta},
 		$data->{traveldate},
 		$data->{from_cities_id},
 		$data->{to_cities_id},
@@ -266,6 +273,15 @@ sub _get_nextID {
 	return 1 + $row->[0];
 }
 
-
+sub _get_ticketsid {
+	
+	my $mode = shift;
+	given ($mode) {
+		
+		when (1) { return 5; }
+		when (2) { return 1; }
+		when (3) { return 2; }
+	}	
+}
 
 1;
