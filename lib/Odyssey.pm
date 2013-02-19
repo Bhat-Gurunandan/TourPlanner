@@ -312,6 +312,7 @@ get '/end_tour' => sub {
 	debug to_dumper($rpt);
 	
 	template end_tour => {
+		qid => $qid,
 		report => $rpt,
 		daywiseitin => build_itinerary(),
 	};
