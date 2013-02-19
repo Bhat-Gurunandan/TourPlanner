@@ -24,13 +24,13 @@
 			<section>
 				<ul class="right">
 					<li><a href="/">Home</a></li>
-					<li><a href="#">Incredible India</a></li>
-					<li><a href="#">Special Places</a></li>
-					<li><a href="#">Mini Itineraries</a></li>
-					<li><a href="#">Indian Journeys</a></li>
-					<li><a href="#">Design Your Tour</a></li>
-					<li><a href="#">Contact</a></li>
-					<li><a href="#">About Us</a></li>
+					<li><a href="http://www.travellers-palm.com/themes" target="travellers-palm">Incredible India</a></li>
+					<li><a href="http://www.travellers-palm.com/special_places" target="travellers-palm">Special Places</a></li>
+					<li><a href="http://www.travellers-palm.com/modules" target="travellers-palm">Mini Itineraries</a></li>
+					<li><a href="http://www.travellers-palm.com/tours" target="travellers-palm">Indian Journeys</a></li>
+					<li><a href="/">Design Your Tour</a></li>
+					<li><a href="http://www.travellers-palm.com/contact-us" target="travellers-palm">Contact</a></li>
+					<li><a href="http://www.travellers-palm.com/about-us" target="travellers-palm">About Us</a></li>
 				</ul>
 			</section>
 		</nav>

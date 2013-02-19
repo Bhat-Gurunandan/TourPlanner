@@ -47,14 +47,15 @@ plugins:
 
 plack_middlewares:
   -
-    - Debug
-    - panels
+    - Expires
+    - content_type
     -
-      - Environment
-      - Response
-      - Timer
-      - Memory
-      - DBITrace
-      - Dancer::Version
-      - Dancer::Settings
-      - Dancer::Logger
+      - image/gif
+      - image/jpeg
+      - image/png
+      - text/css
+      - application/javascript
+    - expires
+    - access plus 3 days
+  -
+    - Deflater
