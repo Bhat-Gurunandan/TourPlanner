@@ -12,20 +12,65 @@
 /* -----------------------------------------
    Shared Styles
 ----------------------------------------- */
+body {
+	color: #5e5e5e;
+}
+
+.wf-loading h1, 
+.wf-loading h2, 
+.wf-loading h3, 
+.wf-loading h4, 
+.wf-loading h5, 
+.wf-loading h6, 
+.wf-loading nav.top-bar a {
+	visibility: hidden
+}
+
+.wf-inactive h1, 
+.wf-inactive h2, 
+.wf-inactive h3, 
+.wf-inactive h4, 
+.wf-inactive h5, 
+.wf-inactive h6, 
+.wf-inactive nav.top-bar a {
+	visibility: hidden
+}
+
+.wf-active h1, 
+.wf-active h2, 
+.wf-active h3, 
+.wf-active h4, 
+.wf-active h5, 
+.wf-active h6, 
+.wf-active nav.top-bar a {
+	font-family: LatoBold;
+	font-weight: normal;
+	color: #5e5e5e;
+	visibility: visible;
+}
+
 .content h1 {
-	font-size: 1.4em;
+	font-size: 1.5em;
 }
 
 .content h2 {
-	font-size: 1.3em
+	font-size: 1.3em;
+	color: #c60f13;
 }
 
 .content h3 {
 	font-size: 1.2em;
+	color: #c60f13;
 }
 
 .content h4 {
 	font-size: 1.1em;
+	color: #c60f13;
+}
+
+.content h5 {
+	font-size: 1.1em;
+	color: #c60f13;
 }
 
 /* -----------------------------------------
@@ -52,6 +97,17 @@ form.custom div.custom.dropdown a.selector {
 }
 
 /* Fix for Google Maps Zurb Foundation */
-#gmap img {
+#gmap img, #banner img {
 	max-width: none;
+}
+
+#banner img {
+	padding-left: 100px;
+}
+
+#banner {
+	background: #fffcf6;
+	height: 149px;
+	border-bottom: 1px solid #eadcb9;
+	margin-bottom: 25px;
 }

@@ -11,9 +11,22 @@
 	<!-- <link rel="stylesheet" href="stylesheets/foundation.css">-->
 	<!-- Included CSS Files (Compressed) -->
 	<link rel="stylesheet" href="[% request.uri_base %]/stylesheets/foundation.min.css">
-	<link rel="stylesheet" href="[% request.uri_base %]/stylesheets/app.css">
+	<link rel="stylesheet" href="[% request.uri_base %]/stylesheets/app3.css">
 	<link rel="stylesheet" href="[% request.uri_base %]/stylesheets/ui-lightness/jquery-ui-1.9.2.custom.min.css">
 	<script src="[% request.uri_base %]/javascripts/modernizr.foundation.js"></script>
+	<script>
+	WebFontConfig = {
+		custom: {
+			families: [
+				'LatoBold'
+			],
+			urls: [ 
+				'[% request.uri_base %]/stylesheets/fonts/lato-bold/stylesheet.css'
+			]
+		}
+	};
+	</script>
+	<script src="[% request.uri_base %]/javascripts/webfont.js"></script>
 	<!-- Included JS Files (Compressed) -->
 	<script src="[% request.uri_base %]/javascripts/foundation.min.js"></script>
 	<script src="[% request.uri_base %]/javascripts/jquery-ui-1.9.2.custom.min.js"></script>
@@ -35,11 +48,8 @@
 			</section>
 		</nav>
 	</div>
-	<div class="row">
-		<div class="twelve columns">
-			<h2>Travellers Palm</h2>
-			<hr />
-		</div>
+	<div id="banner">
+		<img src="/images/new_banner.gif" width="949" height="149" />
 	</div>
 	[% content %]
 	<!-- Included JS Files (Uncompressed) -->
