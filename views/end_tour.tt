@@ -16,12 +16,13 @@
 			<div class="six columns">
 				<form method=post action="[% request.uri_base %]/end_tour" class="custom">
 					<p>
-						We appreciate your decision to travel to India with us. Your itineraries are
-						displayed alongside. Please leave your email address below and we will get 
-						back to you at the earliest.
+						We hope you enjoyed designing your own tour online. The itinerary you 
+						just created is displayed alongside..
 					<p>
 					<p>
-						Your Quotation ID is: [% qid %]
+						If you are interested in receiving a quotation for your tour itinerary, 
+						please leave your email address below and we will get back to you at 
+						the earliest.
 					</p>
 					<p>
 						<input type="text" name="leademail" id="leademail" placeholder="Your email" />
