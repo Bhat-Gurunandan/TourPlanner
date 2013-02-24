@@ -1,0 +1,2 @@
+<script src="[% request.uri_base %]/javascripts/foundation1.min.js"></script>
+<script src="[% request.uri_base %]/javascripts/app.js"></script>

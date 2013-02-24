@@ -173,3 +173,6 @@
 		</form>
 	</div>
 </div>
+[% INCLUDE javascript_includes.tt %]
+<script src="[% request.uri_base %]/javascripts/jquery-ui-1.10.1.custom.min.js"></script>
+<script src="[% request.uri_base %]/javascripts/odyssey_datepicker.js"></script>

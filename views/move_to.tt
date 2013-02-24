@@ -1,42 +1,6 @@
 [% USE AddPTags %]
 [% USE FirstPara %]
 [% USE date %]
-<script>
-	$(document).ready(function(){
-	
-		var hldr = $('#daysleftstr');
-		var tlen = parseInt( hldr.attr('tlen') );
-		var dnum = parseInt( hldr.attr('dnum') );
-		$('select#days').change(function(evt) {
-			
-			var newVal = parseInt( $(this).find(':selected').text() );
-			var dbal = tlen - dnum - newVal + 1;
-			var str = '';
-			if (dbal > 0) {
-				
-				str = 'You will have ' + dbal + ' day(s) left until the end ' + 
-					'of your tour if you choose this option.';
-			}
-			else if (dbal == 0) {
-
-				str = 'You have no days left according to your original schedule ' + 
-					'if you choose this option. Feel free to continue adding days ' +
-					' and we will adjust the duration of your tour when we build ' 
-					'your itinerary';
-			}
-			else {
-				
-				str = 'You will have added ' +  (0 - dbal) + ' day(s) to your original ' +
-					'plan if you choose this option. Feel free to continue adding ' +
-					'days and we will adjust the duration of your tour when we build ' + 
-					'your itinerary';
-			}
-			
-			hldr.html(str);
-			return true;	
-		});
-	});
-</script>
 <div class="content">
 	<div class="row">
 		<div class="eight columns th">
@@ -224,5 +188,7 @@
 		</div>
 	</div>
 </div>
+[% INCLUDE javascript_includes.tt %]
+<script src="[% request.uri_base %]/javascripts/odyssey_itinerary.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZio3-tNd89xE36fpkNaf4m4TYxXrg7Xs&sensor=false"></script>
 <script src="[% request.uri_base %]/javascripts/odyssey_stops.js"></script>

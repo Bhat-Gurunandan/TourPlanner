@@ -11,8 +11,8 @@
 	<!-- <link rel="stylesheet" href="stylesheets/foundation.css">-->
 	<!-- Included CSS Files (Compressed) -->
 	<link rel="stylesheet" href="[% request.uri_base %]/stylesheets/foundation.min.css">
-	<link rel="stylesheet" href="[% request.uri_base %]/stylesheets/app3.css">
-	<link rel="stylesheet" href="[% request.uri_base %]/stylesheets/ui-lightness/jquery-ui-1.9.2.custom.min.css">
+	<link rel="stylesheet" href="[% request.uri_base %]/stylesheets/app4.css">
+	<link rel="stylesheet" href="[% request.uri_base %]/stylesheets/custom-theme/jquery-ui-1.10.1.custom.min.css">
 	<script src="[% request.uri_base %]/javascripts/modernizr.foundation.js"></script>
 	<script>
 	WebFontConfig = {
@@ -27,9 +27,6 @@
 	};
 	</script>
 	<script src="[% request.uri_base %]/javascripts/webfont.js"></script>
-	<!-- Included JS Files (Compressed) -->
-	<script src="[% request.uri_base %]/javascripts/foundation.min.js"></script>
-	<script src="[% request.uri_base %]/javascripts/jquery-ui-1.9.2.custom.min.js"></script>
 </head>
 <body>
 	<div class="contain-to-grid">
@@ -52,27 +49,5 @@
 		<img src="/images/new_banner.gif" width="949" height="149" />
 	</div>
 	[% content %]
-	<!-- Included JS Files (Uncompressed) -->
-	<!--
-	  	<script src="[% request.uri_base %]/javascripts/jquery.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.mediaQueryToggle.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.forms.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.reveal.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.orbit.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.navigation.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.buttons.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.tabs.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.tooltips.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.accordion.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.placeholder.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.alerts.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.topbar.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.joyride.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.clearing.js"></script>
-	  	<script src="[% request.uri_base %]/javascripts/jquery.foundation.magellan.js"></script>
-	-->
-	<!-- Initialize JS Plugins -->
-	<script src="[% request.uri_base %]/javascripts/app.js"></script>
-	<script src="[% request.uri_base %]/javascripts/odyssey.js"></script>
 </body>
 </html>

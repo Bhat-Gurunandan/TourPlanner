@@ -23,7 +23,7 @@ body {
 .wf-loading h5, 
 .wf-loading h6, 
 .wf-loading nav.top-bar a {
-	visibility: hidden
+	visibility: hidden;
 }
 
 .wf-inactive h1, 
@@ -33,7 +33,7 @@ body {
 .wf-inactive h5, 
 .wf-inactive h6, 
 .wf-inactive nav.top-bar a {
-	visibility: hidden
+	visibility: visible;
 }
 
 .wf-active h1, 

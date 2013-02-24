@@ -39,3 +39,4 @@
 		</div>
 	</div>
 </div>
+[% INCLUDE javascript_includes.tt %]

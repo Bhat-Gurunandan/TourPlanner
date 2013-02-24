@@ -294,6 +294,7 @@ get '/stops' => sub {
 	}
 	push @cities, session('status')->{src};
 	
+	content_type 'application/json';
 	return to_json(\@cities);
 };
 
