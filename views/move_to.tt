@@ -26,120 +26,116 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="twelve columns">
-			<div class="eight columns">
-				<form method=post action="[% request.uri_base %]/transit" class="custom">
-					<fieldset>
-						[% IF session.status.dest.routes.size == 0 %]
-							<legend style="background: none;"><h5>Your stay in [% city %]</h5></legend>
-						[% ELSE %]
-							<legend style="background: none;"><h5>Yes, make [% city %] my next destination.</h5></legend>
-							<h6>Choose your Stay and Travel Options in [% city %]</h6>
-						[% END %]
-						<p>
-							Choose preferences for your stay in [% city %]. We have chosen the 
-							best options for you. Feel free to change them if you wish and click on "Take me to [% city %]".
-						</p>
-						<div class="row">
-							<div class="twelve columns">
-								<div class="six columns">
-									 <p>
-										<label for="days">
-											Choose number of nights in [% city %]
-										</label> 
-										<select id="days" name="days" size="1" class="one">
-											[% FOREACH numdays IN [1 .. 10] %]
-											<option[% IF numdays == defaultdays %] selected="selected"[% END %]>[% numdays %]</option>
-											[% END %]
-										</select>
-									</p>
-								</div>
-								<div class="six columns">								
-									[% tlen = session.status.config.tourlength %]
-									[% dnum = session.status.src.daynum %]
-									[% dbal = tlen - dnum - defaultdays + 1 %]
-									<p id="daysleftstr" class="small" tlen="[% tlen %]" dnum="[% dnum %]">
-										[% IF dbal > 0 %]
-											You will have [% dbal %] day(s) left until the end of your 
-											tour if you choose this option.
-										[% ELSIF dbal == 0 %]
-											You have no days left according to your original schedule if you choose this option. 
-											Feel free to continue adding days and we will adjust the duration of your tour when 
-											we build your itinerary
-										[% ELSE %]
-											You will have added [% 0 - dbal %] day(s) to your original plan if you choose this 
-											option. Feel free to continue adding days and we will adjust the duration of your 
-											tour when we build your itinerary
+		<div class="eight columns">
+			<form method=post action="[% request.uri_base %]/transit" class="custom">
+				<fieldset>
+					[% IF session.status.dest.routes.size == 0 %]
+						<legend style="background: none;"><h5>Your stay in [% city %]</h5></legend>
+					[% ELSE %]
+						<legend style="background: none;"><h5>Yes, make [% city %] my next destination.</h5></legend>
+						<h6>Choose your Stay and Travel Options in [% city %]</h6>
+					[% END %]
+					<p>
+						Choose preferences for your stay in [% city %]. We have chosen the 
+						best options for you. Feel free to change them if you wish and click on "Take me to [% city %]".
+					</p>
+					<div class="row">
+						<div class="twelve columns">
+							<div class="six columns">
+								 <p>
+									<label for="days">
+										Choose number of nights in [% city %]
+									</label> 
+									<select id="days" name="days" size="1" class="one">
+										[% FOREACH numdays IN [1 .. 10] %]
+										<option[% IF numdays == defaultdays %] selected="selected"[% END %]>[% numdays %]</option>
 										[% END %]
-									</p>
-								</div>
+									</select>
+								</p>
+							</div>
+							<div class="six columns">								
+								[% tlen = session.status.config.tourlength %]
+								[% dnum = session.status.src.daynum %]
+								[% dbal = tlen - dnum - defaultdays + 1 %]
+								<p id="daysleftstr" class="small" tlen="[% tlen %]" dnum="[% dnum %]">
+									[% IF dbal > 0 %]
+										You will have [% dbal %] day(s) left until the end of your 
+										tour if you choose this option.
+									[% ELSIF dbal == 0 %]
+										You have no days left according to your original schedule if you choose this option. 
+										Feel free to continue adding days and we will adjust the duration of your tour when 
+										we build your itinerary
+									[% ELSE %]
+										You will have added [% 0 - dbal %] day(s) to your original plan if you choose this 
+										option. Feel free to continue adding days and we will adjust the duration of your 
+										tour when we build your itinerary
+									[% END %]
+								</p>
 							</div>
 						</div>
-						<p>Select a hotel for your stay in [% city %] (click hotel name to see details):</p>
-						<p>
-							[% FOREACH hotel IN hotels %]
-							<label for="hotelid[% hotel.hotel_id %]">
-								<input type="radio" id="hotelid[% hotel.hotel_id %]" name="hotelid" value="[% hotel.hotel_id %]"[% IF defhotel.hotel_id == hotel.hotel_id %] checked[% END %] />
-								<a href="#" data-reveal-id="hotel[% hotel.hotel_id %]" data-animation="fade">[% hotel.hotel %] ([% hotel.categoryname %])</a>
-							</label>
-							[% END %]
-						</p>
-						[% INCLUDE route_options.tt %]
-						<p style="text-align: center;"><input type="submit" class="button alert" value="Take me to [% city %]" /></p>
-					</fieldset>
-				</form>
-			</div>
-			<div class="four columns">
-				<div class="panel">
-					<h2>Your Tour Status Today</h2>
+					</div>
+					<p>Select a hotel for your stay in [% city %] (click hotel name to see details):</p>
 					<p>
-						Today is <strong>[% date.format(session.status.src.date, '%a, %d %b %Y') %] - Day [% session.status.src.daynum %]</strong> of your Tour.
-						[% IF session.status.dest.routes.size == 0 %]
-							You are starting your tour in <strong>[% session.status.src.city %]</strong>.
-							Please select your hotel and the number of nights you wish to stay.
-						[% ELSE %] 
-							You are currently in <strong>[% session.status.src.city %]</strong> and ready to leave.
-							You are considering <strong>[% city %]</strong> as your next destination
+						[% FOREACH hotel IN hotels %]
+						<label for="hotelid[% hotel.hotel_id %]">
+							<input type="radio" id="hotelid[% hotel.hotel_id %]" name="hotelid" value="[% hotel.hotel_id %]"[% IF defhotel.hotel_id == hotel.hotel_id %] checked[% END %] />
+							<a href="#" data-reveal-id="hotel[% hotel.hotel_id %]" data-animation="fade">[% hotel.hotel %] ([% hotel.categoryname %])</a>
+						</label>
 						[% END %]
 					</p>
-					<div id="gmap" style="height: 400px; width: 100%"></div>
-					<p class="small">
-						Your previous destinations and the order in which you have visited each are marked in blue on the map of the region below
-					</p>
-				</div>
+					[% INCLUDE route_options.tt %]
+					<p style="text-align: center;"><input type="submit" class="button alert" value="Take me to [% city %]" /></p>
+				</fieldset>
+			</form>
+		</div>
+		<div class="four columns">
+			<div class="panel">
+				<h2>Your Tour Status Today</h2>
+				<p>
+					Today is <strong>[% date.format(session.status.src.date, '%a, %d %b %Y') %] - Day [% session.status.src.daynum %]</strong> of your Tour.
+					[% IF session.status.dest.routes.size == 0 %]
+						You are starting your tour in <strong>[% session.status.src.city %]</strong>.
+						Please select your hotel and the number of nights you wish to stay.
+					[% ELSE %] 
+						You are currently in <strong>[% session.status.src.city %]</strong> and ready to leave.
+						You are considering <strong>[% city %]</strong> as your next destination
+					[% END %]
+				</p>
+				<div id="gmap" style="height: 400px; width: 100%"></div>
+				<p class="small">
+					Your previous destinations and the order in which you have visited each are marked in blue on the map of the region below
+				</p>
 			</div>
 		</div>
 	</div>
 	<div class="row">
-		<div class="twelve columns">
-			<div class="four columns">
-				<div class="panel" style="height: 15em;">
-					<p>No, Show me other places around [% session.status.src.city %]</p>
-					<ul class="disc">
-						[% FOREACH nrcity IN nearcities %]
-						<li><a href="[% request.uri_base %]/explore/[% nrcity.city %]">[% nrcity.city %]</a></li>
-						[% END %]
-					</ul>
-				</div>
+		<div class="four columns">
+			<div class="panel" style="height: 15em;">
+				<h5>No, show me other places around [% session.status.src.city %]</h5>
+				<ul class="disc">
+					[% FOREACH nrcity IN nearcities %]
+					<li><a href="[% request.uri_base %]/explore/[% nrcity.city %]">[% nrcity.city %]</a></li>
+					[% END %]
+				</ul>
 			</div>
-			<div class="four columns">
-				<div class="panel" style="height: 15em;">
-					<p>&hellip;Or other places further away from [% session.status.src.city %]</p>
-					[% INCLUDE randomcities_form.tt %]
-				</div>
-			</div>
-			<div class="four columns">
-				<div class="panel" style="height: 15em;">
-					<p>&hellip;Or, end your tour now</p>
-					<p>
-						You can end your tour and confirm your itinerary on the conformation page. 
-						We would be happy to make any changes to your itinerary after we recieve it. 
-					</p>
-					<p>Yes, <a href="/end_tour">end my tour</a> at [% session.status.src.city %]</p>
-				</div>					
-			</div>
-			<hr />
 		</div>
+		<div class="four columns">
+			<div class="panel" style="height: 15em;">
+				<h5>&hellip;Or other places further away from [% session.status.src.city %]</h5>
+				[% INCLUDE randomcities_form.tt %]
+			</div>
+		</div>
+		<div class="four columns">
+			<div class="panel" style="height: 15em;">
+				<h5>&hellip;Or, end your tour now</h5>
+				<p>
+					You can end your tour and confirm your itinerary on the conformation page. 
+					We would be happy to make any changes to your itinerary after we recieve it. 
+				</p>
+				<p>Yes, <a href="/end_tour">end my tour</a> at [% session.status.src.city %]</p>
+			</div>					
+		</div>
+		<hr />
 	</div>
 	[% FOREACH hotel IN hotels %]
 	<div id="hotel[% hotel.hotel_id %]" class="reveal-modal medium">

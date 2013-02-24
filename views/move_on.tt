@@ -3,90 +3,84 @@
 [% USE date %]
 <div class="content">
 	<div class="row">
-		<div class="twelve columns">
-			<div class="eight columns">
-				<div id="gmap" style="width: 100%; height: 470px;"></div>
-			</div>
-			<div class="four columns">
-				<h1>Your Tour Status</h2>
-				<h4>
-					[% date.format(session.status.src.date, '%a, %d %b %Y') %] &ndash; Day 
-					[% session.status.src.daynum %] of your Tour
-				</h4>
-				<p>
-					You are currently in <strong>[% session.status.src.city %]</strong> (the bue map marker) and ready to select your next 
-					destination. We recommend that you select your next destination from cities around [% session.status.src.city %].
-				</p>
-				<p>
-					The map on the left, highlights destinations (red map markers) we recommend. Below the map, we have listed these destinations
-					with a note on what makes each of these special. 
-				</p>
-				<div class="panel">
-					<p>If you prefer to explore destinations further away, select one from the dropdown below and click on "Go"</p>
-					[% INCLUDE randomcities_form.tt %]
-				</div>
-			</div>
-			<hr />
+		<div class="eight columns">
+			<div id="gmap" style="width: 100%; height: 470px;"></div>
 		</div>
+		<div class="four columns">
+			<h1>Your Tour Status</h2>
+			<h4>
+				[% date.format(session.status.src.date, '%a, %d %b %Y') %] &ndash; Day 
+				[% session.status.src.daynum %] of your Tour
+			</h4>
+			<p>
+				You are currently in <strong>[% session.status.src.city %]</strong> (the bue map marker) and ready to select your next 
+				destination. We recommend that you select your next destination from cities around [% session.status.src.city %].
+			</p>
+			<p>
+				The map on the left, highlights destinations (red map markers) we recommend. Below the map, we have listed these destinations
+				with a note on what makes each of these special. 
+			</p>
+			<div class="panel">
+				<p>If you prefer to explore destinations further away, select one from the dropdown below and click on "Go"</p>
+				[% INCLUDE randomcities_form.tt %]
+			</div>
+		</div>
+		<hr />
 	</div>
 	<div class="row">
-		<div class="twelve columns">
-			<div class="six columns">
-				<h2 id="places" city="[% session.status.src.city %]" lat="[% session.status.src.lat %]" lng="[% session.status.src.lng %]">
-					Interesting Places to go to from [% session.status.src.city %]
-				</h2>
-				[% FOREACH city in cities %]
-				<div class="place" lat="[% city.latitude %]" lng="[% city.longitude %]" city="[% city.city %]" cityid=[% city.cities_id %]">
-					<h3><a href="[% request.usr_base %]/explore/[% city.city %]">[% city.city %]</a></h3>
-					<h4>[% city.oneliner %]</h4>
-					<p class="th">
-						<img src="[% request.uri_base %]/images/city/city_[% city.cities_id %]_themecollage.jpg" width="590" height="160" />
-					</p>
-					<p class="desc">[% city.writeup | $AddPTags | $FirstPara %]</p>
-					<p><a href="[% request.usr_base %]/explore/[% city.city %]">Explore [% city.city %] &raquo;</a></p>
-					[% IF ! loop.last %]<hr />[% END %]					
-				</div>
-				[% END %]
+		<div class="six columns">
+			<h2 id="places" city="[% session.status.src.city %]" lat="[% session.status.src.lat %]" lng="[% session.status.src.lng %]">
+				Interesting Places to go to from [% session.status.src.city %]
+			</h2>
+			[% FOREACH city in cities %]
+			<div class="place" lat="[% city.latitude %]" lng="[% city.longitude %]" city="[% city.city %]" cityid=[% city.cities_id %]">
+				<h3><a href="[% request.usr_base %]/explore/[% city.city %]">[% city.city %]</a></h3>
+				<h4>[% city.oneliner %]</h4>
+				<p class="th">
+					<img src="[% request.uri_base %]/images/city/city_[% city.cities_id %]_themecollage.jpg" width="590" height="160" />
+				</p>
+				<p class="desc">[% city.writeup | $AddPTags | $FirstPara %]</p>
+				<p><a href="[% request.usr_base %]/explore/[% city.city %]">Explore [% city.city %] &raquo;</a></p>
+				[% IF ! loop.last %]<hr />[% END %]					
 			</div>
-			<div class="six columns">
-				<ul class="accordion">
-					<li class="active">
-    					<div class="title"><h5>Day-wise Itinerary</h5></div>
-						<div class="content">
-							[% INCLUDE day_wise_itin.tt %]
-						</div>
-					</li>
-					<li>
-    					<div class="title"><h5>City-wise Itinerary</h5></div>
-						<div class="content">
-							[% INCLUDE acco_quote.tt %]
-						</div>
-					</li>
-				</ul>
-			</div>
-			<hr />
+			[% END %]
 		</div>
+		<div class="six columns">
+			<ul class="accordion">
+				<li class="active">
+					<div class="title"><h5>Day-wise Itinerary</h5></div>
+					<div class="content">
+						[% INCLUDE day_wise_itin.tt %]
+					</div>
+				</li>
+				<li>
+					<div class="title"><h5>City-wise Itinerary</h5></div>
+					<div class="content">
+						[% INCLUDE acco_quote.tt %]
+					</div>
+				</li>
+			</ul>
+		</div>
+		<hr />
 	</div>
 	<div class="row">
-		<div class="twelve columns">
-			<div class="six columns">
-				<div class="panel" style="height: 14em;">
-					<p>Or explore places further away from [% session.status.src.city %]&hellip;</p>
-					[% INCLUDE randomcities_form.tt %]
-				</div>
+		<div class="six columns">
+			<div class="panel" style="height: 14em;">
+				<h5>Or explore places further away from [% session.status.src.city %]&hellip;</h5>
+				[% INCLUDE randomcities_form.tt %]
 			</div>
-			<div class="six columns end">
-				<div class="panel" style="height: 14em;">
-					<p>Or end my tour at [% session.status.src.city %]</p>
-					<p>
-						You can end your tour and confirm your itinerary on the conformation page. 
-						We would be happy to make any changes to your itinerary after we recieve it. 
-					</p>
-					<p>Yes. <a href="/end_tour">End my tour now</a> at [% session.status.src.city %]</p>
-				</div>
-			</div>
-			<hr />
 		</div>
+		<div class="six columns end">
+			<div class="panel" style="height: 14em;">
+				<h5>Or end my tour at [% session.status.src.city %]</h5>
+				<p>
+					You can end your tour and confirm your itinerary on the conformation page. 
+					We would be happy to make any changes to your itinerary after we recieve it. 
+				</p>
+				<p>Yes. <a href="/end_tour">End my tour now</a> at [% session.status.src.city %]</p>
+			</div>
+		</div>
+		<hr />
 	</div>					
 </div>
 [% INCLUDE javascript_includes.tt %]

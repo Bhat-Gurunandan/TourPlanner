@@ -109,7 +109,7 @@
 				 		<div class="four columns">
 							<Label for="arrdate" class="right inline">Arriving On:</Label>
 						</div>
-						<input id="arrdate" name="arrdate" type="text" value="[% valid.arrdate %]" class="eight datepicker"/>
+						<input id="arrdate" name="arrdate" type="text" value="[% valid.arrdate %]" class="eight"/>
 					</div>
 				 	<div class="six columns">
 				 		<div class="four columns">
@@ -151,7 +151,7 @@
 				 		<div class="four columns">
 							<Label for="depdate" class="right inline">Depart On:</Label>
 						</div>
-						<input id="depdate" name="depdate" value="[% valid.depdate %]" type="text" class="eight datepicker"/>
+						<input id="depdate" name="depdate" value="[% valid.depdate %]" type="text" class="eight"/>
 					</div>
 				 	<div class="six columns">
 				 		<div class="four columns">
@@ -175,4 +175,4 @@
 </div>
 [% INCLUDE javascript_includes.tt %]
 <script src="[% request.uri_base %]/javascripts/jquery-ui-1.10.1.custom.min.js"></script>
-<script src="[% request.uri_base %]/javascripts/odyssey_datepicker.js"></script>
+<script src="[% request.uri_base %]/javascripts/odyssey_diy_datepicker.js"></script>

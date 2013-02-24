@@ -2,17 +2,13 @@
 <div class="content">
 	<div class="row">
 		<div class="twelve columns">
-			<div class="six columns">
+			<div class="six columns end">
 				<h2>Thank you [% session.status.config.leadname %]</h2>
 				<hr />
 				<p>
-					You will hear from us shortly.
+					We have recieved your itinerary. You will hear from us shortly.
+					Feel free to <a href="/">plan another tour</a> if you wish. 
 				<p>
-			</div>
-			<div class="six columns">
-				[% INCLUDE day_wise_itin.tt %]
-				<hr />
-				[% INCLUDE acco_quote.tt %]
 			</div>
 		</div>
 	</div>

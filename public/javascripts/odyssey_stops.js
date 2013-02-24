@@ -17,16 +17,11 @@ $(document).ready(function(){
 		var mapBounds = new google.maps.LatLngBounds();
 		var stops = data.length;
 
-		console.log(stops);
-		
 		var lastCity = '';
 		var stopNum = 1;		
 		for(i = 0; i < stops; ++i) {
 			
-			console.log(data[i]);
-			
 			if (data[i].city == lastCity) continue;
-			
 			
 			var mLtLn = new google.maps.LatLng(data[i].lat, data[i].lng);
 			var mOpts = {
