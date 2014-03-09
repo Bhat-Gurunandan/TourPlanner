@@ -276,6 +276,8 @@ sub _get_nextID {
 sub _get_ticketsid {
 	
 	my $mode = shift;
+
+        no if $] >= 5.018, warnings => "experimental::smartmatch";
 	given ($mode) {
 		
 		when (1) { return 5; }
