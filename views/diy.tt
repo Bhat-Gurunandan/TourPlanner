@@ -36,9 +36,10 @@
 							</div>
 							<div class="six columns">
 								[% categories = [
-									{val => 40, name => 'Top of the Line'}
-									{val => 30, name => 'Luxury' }
-									{val => 20, name => 'Superior'}
+									{val => 50, name => 'Top of the Line'}
+									{val => 40, name => 'Luxury' }
+									{val => 30, name => 'Superior'}
+									{val => 20, name => 'Comfortable'}
 									{val => 10, name => 'Standard'} 
 								  ] 
 								%]
