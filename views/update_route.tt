@@ -1,0 +1,43 @@
+<p>
+    We have assumed that it would be best to start your travel at or, after the
+    time show below. If you would prefer to leave earlier or later, you can select
+    a different time and click "Update" to see other options at a different time
+</p>
+<div class="row">
+     <div class="two columns">
+     [% timeopts =
+        [
+            { value => "05:00:00.000" display => '5 AM' },
+            { value => "06:00:00.000" display => '6 AM' },
+            { value => "07:00:00.000" display => '7 AM' },
+            { value => "08:00:00.000" display => '8 AM' },
+            { value => "09:00:00.000" display => '9 AM' },
+            { value => "10:00:00.000" display => '10 AM' },
+            { value => "11:00:00.000" display => '11 AM' },
+            { value => "12:00:00.000" display => '12 Noon' },
+            { value => "13:00:00.000" display => '1 PM' },
+            { value => "14:00:00.000" display => '2 PM' },
+            { value => "15:00:00.000" display => '3 PM' },
+            { value => "16:00:00.000" display => '4 PM' },
+            { value => "17:00:00.000" display => '5 PM' },
+            { value => "18:00:00.000" display => '6 PM' },
+            { value => "19:00:00.000" display => '7 PM' },
+            { value => "20:00:00.000" display => '8 PM' },
+            { value => "21:00:00.000" display => '9 PM' },
+        ]
+     %]
+     [% IF !deptime %][% deptime = '09:00:00.000' %][% END %]
+       <select style="display:none;" id="deptime" name="deptime">
+       [% FOREACH topt IN timeopts %]
+          <option value="[% topt.value %]" [% IF deptime == topt.value %]selected="selecteected"[% END %]>[% topt.display %]</option>
+       [% END %]
+       </select>
+       <input type="hidden" id="curretd" name="curretd" value="[% session.status.src.etd %]" />
+       <input type="hidden" id="currsrc" name="currsrc" value="[% session.status.src.cityid %]" />
+       <input type="hidden" id="currdest" name="currdest" value="[% session.status.dest.cityid %]" />
+    </div>
+    <div class="three columns">
+          <a class="button tiny" id="update_route" href="#" style="margin-top: 5px;">Update Departure Time</a>
+    </div>
+    <div class="seven columns"></div>
+</div>

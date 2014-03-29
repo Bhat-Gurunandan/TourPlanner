@@ -1,24 +1,9 @@
 [% IF routes.size > 0 %]
-	<p>Here is our recommended way to travel <strong>from [% session.status.src.city %] to [% session.status.dest.city %]:</strong></p>
-	[% FOREACH route IN routes %]
-	<div class="row">
-		<div class="twelve columns centered">
-			<h6><input type="radio" name="travelopts" value="[% loop.index %]" [% IF loop.first %]checked="checked"[% END %] /> Option [% loop.count %]: [% route.modestr %] | <span style="font-size: 0.9em;">Approximately [% route.duration %]</span></h6>
-			<table style="width: 100%;">
-				<thead><tr><th>Carrier</th><th>From</th><th>To</th><th>Departure</th><th>Arrival</th></tr></thead>
-				<tbody>
-				[% FOREACH hop IN route.hops %]
-				<tr>
-					<td>[% hop.modeno %]</td>
-					<td>[% hop.fromcity %]</td>
-					<td>[% hop.tocity %]</td>
-					<td>[% date.format(hop.departure, '%a %d %b %H:%M') %]</td>
-					<td>[% date.format(hop.arrival, '%a %d %b %H:%M') %]</td>
-				</tr>
-				[% END %]
-				</tbody>
-			</table>
-		</div>
-	</div>
-	[% END %]
+   <p>
+    Here is our recommended way to travel <strong>from [% session.status.src.city %] to [% session.status.dest.city %]:</strong>
+    </p>
+    [% INCLUDE update_route.tt %]
+    <div id="optionholder">
+         [% INCLUDE route_list.tt %]
+    </div>
 [% END %]

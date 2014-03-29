@@ -12,13 +12,13 @@ use DateTime::Format::Strptime;
 
 use Exporter qw{import};
 our @EXPORT = qw{
-	routefinder
-	departuredate
-	departuretime
-	add_days_to_date
-	compare_dates
-	duration_days
-};
+                    routefinder
+                    departuredate
+                    departuretime
+                    add_days_to_date
+                    compare_dates
+                    duration_days
+            };
 
 =head1 NAME
 
@@ -30,7 +30,7 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.01';
+    our $VERSION = '0.01';
 
 
 =head1 SYNOPSIS
@@ -56,77 +56,77 @@ if you don't export anything, such as for a purely object-oriented module.
 =cut
 
 sub routefinder {
-	
-	my ($from, $to, $tstmp) = @_;
-	
-	$tstmp = database->quote($tstmp);
-	my $qry = "exec p_RouteFinder_x $tstmp, $from, $to, 3, 1, null";
 
-# Returns:	
-	# options_id (serial)
-	# optionno (serial within an option)
-	# fromcities_id
-	# tocities_id
-	# fromcity (name)
-	# tocity (name)
-	# mode (mode id)
-	# modestr ("Train", "Car", "Air" etc.) 
-	# modeno ("Car" or Flight No "IC 234", null for train)
-	# trainno (Train Number "1245")
-	# departure (timestamp)
-	# arrival (timestamp)
-	# maxoption (?)
-	# hops
-	# modepreference (Sort Order?)
-	
-	my $rtsth = database->prepare($qry);
-	$rtsth->execute;
-	
-	my @opts;
-	my @hops;
-	my $previdx = 1;
-	while (my $row = $rtsth->fetchrow_hashref('NAME_lc')) {
-		
-		my $idx = $row->{optionno};
-		if ($idx != $previdx) {
+    my ($from, $to, $tstmp) = @_;
 
-			my @tmp = @hops;
+    $tstmp = database->quote($tstmp);
+    my $qry = "exec p_RouteFinder_x $tstmp, $from, $to, 3, 1, null";
 
-			push @opts, {
-				modestr => join(', ', map {$_->{modestr}} @tmp),
-				hops => \@tmp,
-				duration => duration($tmp[0]->{departure}, $tmp[-1]->{arrival}),
-			};
-			
-			@hops = ();
-		}
-		
-		push @hops, {
-			optionno => $idx,
-			modestr => $row->{modestr},
-			fromcities_id => $row->{fromcities_id},
-			fromcity => $row->{fromcity},
-			tocities_id => $row->{tocities_id},
-			tocity => $row->{tocity},
-			mode => $row->{mode},
-			modeno => $row->{modeno},
-			trainno => $row->{trainno},
-			departure => $row->{departure},
-			arrival => $row->{arrival},
-			overnight => _is_overnight($row->{departure}, $row->{arrival}),
-			hops => $row->{hops},
-			modepreference => $row->{modepreference},
-		};
+    # Returns:
+    # options_id (serial)
+    # optionno (serial within an option)
+    # fromcities_id
+    # tocities_id
+    # fromcity (name)
+    # tocity (name)
+    # mode (mode id)
+    # modestr ("Train", "Car", "Air" etc.)
+    # modeno ("Car" or Flight No "IC 234", null for train)
+    # trainno (Train Number "1245")
+    # departure (timestamp)
+    # arrival (timestamp)
+    # maxoption (?)
+    # hops
+    # modepreference (Sort Order?)
 
-		$previdx = $idx
-	}
-	push @opts, {
-		modestr => join(', ', map {$_->{modestr}} @hops),
-		hops => \@hops,
-		duration => duration($hops[0]->{departure}, $hops[-1]->{arrival}),
-	};
-	
-	return \@opts;	
+    my $rtsth = database->prepare($qry);
+    $rtsth->execute;
+
+    my @opts;
+    my @hops;
+    my $previdx = 1;
+    while (my $row = $rtsth->fetchrow_hashref('NAME_lc')) {
+
+        my $idx = $row->{optionno};
+        if ($idx != $previdx) {
+
+            my @tmp = @hops;
+
+            push @opts, {
+                modestr => join(', ', map {$_->{modestr}} @tmp),
+                hops => \@tmp,
+                duration => duration($tmp[0]->{departure}, $tmp[-1]->{arrival}),
+            };
+
+            @hops = ();
+        }
+
+        push @hops, {
+            optionno => $idx,
+            modestr => $row->{modestr},
+            fromcities_id => $row->{fromcities_id},
+            fromcity => $row->{fromcity},
+            tocities_id => $row->{tocities_id},
+            tocity => $row->{tocity},
+            mode => $row->{mode},
+            modeno => $row->{modeno},
+            trainno => $row->{trainno},
+            departure => $row->{departure},
+            arrival => $row->{arrival},
+            overnight => _is_overnight($row->{departure}, $row->{arrival}),
+            hops => $row->{hops},
+            modepreference => $row->{modepreference},
+        };
+
+        $previdx = $idx
+    }
+    push @opts, {
+        modestr => join(', ', map {$_->{modestr}} @hops),
+        hops => \@hops,
+        duration => duration($hops[0]->{departure}, $hops[-1]->{arrival}),
+    };
+
+    return \@opts;
 }
 
 =head2 departuredate
@@ -134,50 +134,55 @@ sub routefinder {
 =cut
 
 sub departuredate {
-	
-	my ($start, $end, $days) = @_;
 
-	my $strpt = DateTime::Format::Strptime->new({
-		pattern => '%Y-%m-%d %H:%M:%S.000',
-		time_zone => 'Asia/Kolkata'
-	});
+    my ($start, $end, $days) = @_;
 
-	my $dtstart = $strpt->parse_datetime($start);
+    my $strpt = DateTime::Format::Strptime->new({
+        pattern => '%Y-%m-%d %H:%M:%S.000',
+        time_zone => 'Asia/Kolkata'
+    });
 
-	my $dtend = $strpt->parse_datetime($end);
-	$dtend = DateTime->new(
-		year => $dtend->year,
-		month => $dtend->month,
-		day => $dtend->day,
-		hour => 0,
-		minute => 0,
-		second => 0
-	);
+    my $dtstart = $strpt->parse_datetime($start);
 
-	my $du = DateTime::Duration->new(days => $days);
-	$dtend->add_duration($du);
-	my $depdate = $dtend->strftime('%Y-%m-%d %H:%M:%S.000');
-	
-	my $delta = $dtend - $dtstart;
-	my $daynum = $delta->in_units('days');
-	
-	return ($daynum + 1, $depdate);
-} 
+    my $dtend = $strpt->parse_datetime($end);
+    $dtend = DateTime->new(
+        year => $dtend->year,
+        month => $dtend->month,
+        day => $dtend->day,
+        hour => 0,
+        minute => 0,
+        second => 0
+    );
+
+    my $du = DateTime::Duration->new(days => $days);
+    $dtend->add_duration($du);
+    my $depdate = $dtend->strftime('%Y-%m-%d %H:%M:%S.000');
+
+    my $delta = $dtend - $dtstart;
+    my $daynum = $delta->in_units('days');
+
+    return ($daynum + 1, $depdate);
+}
 
 sub departuretime {
 
-	my $start = shift;
-		
-	my $strpt = DateTime::Format::Strptime->new({
-		pattern => '%Y-%m-%d %H:%M:%S.000',
-		time_zone => 'Asia/Kolkata'
-	});
-	my $dtstart = $strpt->parse_datetime($start);
-	
-	my $du = DateTime::Duration->new(hours => 9);
-	$dtstart->add_duration($du);
-	
-	return $dtstart->strftime('%Y-%m-%d %H:%M:%S.000');
+    my $start = shift;
+
+    my $strpt = DateTime::Format::Strptime->new({
+        pattern => '%Y-%m-%d %H:%M:%S.000',
+        time_zone => 'Asia/Kolkata'
+    });
+    my $dtstart = $strpt->parse_datetime($start);
+
+    # We always fix the departure time to 9 AM.
+    # We can alter this locally to get a different
+    # route that starts later, but that is reflected
+    # (via ajax) to the route only.
+    
+    my $du = DateTime::Duration->new(hours => 9);
+    $dtstart->add_duration($du);
+
+    return $dtstart->strftime('%Y-%m-%d %H:%M:%S.000');
 }
 
 =head2 duration
@@ -185,74 +190,74 @@ sub departuretime {
 =cut
 
 sub duration {
-	
-	my ($start, $end) = @_;
-	my $strpt = DateTime::Format::Strptime->new({
-		pattern => '%Y-%m-%d %H:%M:%S.000',
-		time_zone => 'Asia/Kolkata'
-	});
 
-	$start = $strpt->parse_datetime($start);
-	$end = $strpt->parse_datetime($end);
-	
-	my $dt = $end->strftime('%s') - $start->strftime('%s');
-	my $hours = int($dt/3600); 
-	my $mins = int(($dt - 3600 * $hours) / 60); 
+    my ($start, $end) = @_;
+    my $strpt = DateTime::Format::Strptime->new({
+        pattern => '%Y-%m-%d %H:%M:%S.000',
+        time_zone => 'Asia/Kolkata'
+    });
 
-	$hours = ($mins > 30) ? $hours + 1 : $hours;
-	return "$hours hours";
+    $start = $strpt->parse_datetime($start);
+    $end = $strpt->parse_datetime($end);
+
+    my $dt = $end->strftime('%s') - $start->strftime('%s');
+    my $hours = int($dt/3600);
+    my $mins = int(($dt - 3600 * $hours) / 60);
+
+    $hours = ($mins > 30) ? $hours + 1 : $hours;
+    return "$hours hours";
 }
 
 sub duration_days {
-	
-	my ($start, $end) = @_;
 
-	my $strpt = DateTime::Format::Strptime->new({
-		pattern => '%Y-%m-%d %H:%M:%S.000',
-		time_zone => 'Asia/Kolkata'
-	});
-	my $dtstart = $strpt->parse_datetime($start);
-	my $dtend = $strpt->parse_datetime($end);
-	my $duration = $dtstart->delta_days($dtend);
+    my ($start, $end) = @_;
 
-	return $duration->{days};
+    my $strpt = DateTime::Format::Strptime->new({
+        pattern => '%Y-%m-%d %H:%M:%S.000',
+        time_zone => 'Asia/Kolkata'
+    });
+    my $dtstart = $strpt->parse_datetime($start);
+    my $dtend = $strpt->parse_datetime($end);
+    my $duration = $dtstart->delta_days($dtend);
+
+    return $duration->{days};
 }
 
 sub add_days_to_date {
-	
-	my ($start, $days) = @_;
-	
-	my $strpt = DateTime::Format::Strptime->new({
-		pattern => '%Y-%m-%d %H:%M:%S.000',
-		time_zone => 'Asia/Kolkata'
-	});
 
-	my $dtstart = $strpt->parse_datetime($start);
-	my $du = DateTime::Duration->new(days => $days);
-	$dtstart->add_duration($du);
-	
-	return $dtstart->strftime('%Y-%m-%d %H:%M:%S.000');
+    my ($start, $days) = @_;
+
+    my $strpt = DateTime::Format::Strptime->new({
+        pattern => '%Y-%m-%d %H:%M:%S.000',
+        time_zone => 'Asia/Kolkata'
+    });
+
+    my $dtstart = $strpt->parse_datetime($start);
+    my $du = DateTime::Duration->new(days => $days);
+    $dtstart->add_duration($du);
+
+    return $dtstart->strftime('%Y-%m-%d %H:%M:%S.000');
 }
 
 sub compare_dates {
-	
-	my ($from, $to) = @_;
-	
-	my $strpt = DateTime::Format::Strptime->new({
-		pattern => '%Y-%m-%d %H:%M:%S.000',
-		time_zone => 'Asia/Kolkata'
-	});
 
-	return DateTime->compare(
-		$strpt->parse_datetime($from)->truncate(to => 'day'),
-		$strpt->parse_datetime($to)->truncate(to => 'day')
-	);
+    my ($from, $to) = @_;
+
+    my $strpt = DateTime::Format::Strptime->new({
+        pattern => '%Y-%m-%d %H:%M:%S.000',
+        time_zone => 'Asia/Kolkata'
+    });
+
+    return DateTime->compare(
+        $strpt->parse_datetime($from)->truncate(to => 'day'),
+        $strpt->parse_datetime($to)->truncate(to => 'day')
+    );
 }
 
 sub _is_overnight {
-	
-	my ($from, $to) = @_;
-	return (compare_dates($from, $to) != 0)	? 1 : 0;
+
+    my ($from, $to) = @_;
+    return (compare_dates($from, $to) != 0)     ? 1 : 0;
 }
 
 =head1 AUTHOR
@@ -344,4 +349,4 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =cut
 
-1; # End of Odyssey::RouteFinder
+1;                              # End of Odyssey::RouteFinder

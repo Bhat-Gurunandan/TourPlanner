@@ -188,3 +188,4 @@
 <script src="[% request.uri_base %]/javascripts/odyssey_itinerary.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZio3-tNd89xE36fpkNaf4m4TYxXrg7Xs&sensor=false"></script>
 <script src="[% request.uri_base %]/javascripts/odyssey_stops.js"></script>
+<script src="[% request.uri_base %]/javascripts/odyssey_update_route.js"></script>
