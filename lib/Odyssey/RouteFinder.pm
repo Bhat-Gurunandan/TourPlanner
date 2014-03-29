@@ -93,8 +93,8 @@ sub routefinder {
             my @tmp = @hops;
 
             push @opts, {
-                modestr => join(', ', map {$_->{modestr}} @tmp),
-                hops => \@tmp,
+                modestr  => join(', ', map {$_->{modestr}} @tmp),
+                hops     => \@tmp,
                 duration => duration($tmp[0]->{departure}, $tmp[-1]->{arrival}),
             };
 
@@ -102,27 +102,27 @@ sub routefinder {
         }
 
         push @hops, {
-            optionno => $idx,
-            modestr => $row->{modestr},
-            fromcities_id => $row->{fromcities_id},
-            fromcity => $row->{fromcity},
-            tocities_id => $row->{tocities_id},
-            tocity => $row->{tocity},
-            mode => $row->{mode},
-            modeno => $row->{modeno},
-            trainno => $row->{trainno},
-            departure => $row->{departure},
-            arrival => $row->{arrival},
-            overnight => _is_overnight($row->{departure}, $row->{arrival}),
-            hops => $row->{hops},
+            optionno       => $idx,
+            modestr        => $row->{modestr},
+            fromcities_id  => $row->{fromcities_id},
+            fromcity       => $row->{fromcity},
+            tocities_id    => $row->{tocities_id},
+            tocity         => $row->{tocity},
+            mode           => $row->{mode},
+            modeno         => $row->{modeno},
+            trainno        => $row->{trainno},
+            departure      => $row->{departure},
+            arrival        => $row->{arrival},
+            overnight      => _is_overnight($row->{departure}, $row->{arrival}),
+            hops           => $row->{hops},
             modepreference => $row->{modepreference},
         };
 
         $previdx = $idx
     }
     push @opts, {
-        modestr => join(', ', map {$_->{modestr}} @hops),
-        hops => \@hops,
+        modestr  => join(', ', map {$_->{modestr}} @hops),
+        hops     => \@hops,
         duration => duration($hops[0]->{departure}, $hops[-1]->{arrival}),
     };
 
@@ -146,10 +146,10 @@ sub departuredate {
 
     my $dtend = $strpt->parse_datetime($end);
     $dtend = DateTime->new(
-        year => $dtend->year,
-        month => $dtend->month,
-        day => $dtend->day,
-        hour => 0,
+        year   => $dtend->year,
+        month  => $dtend->month,
+        day    => $dtend->day,
+        hour   => 0,
         minute => 0,
         second => 0
     );
