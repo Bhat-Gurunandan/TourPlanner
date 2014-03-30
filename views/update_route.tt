@@ -39,5 +39,10 @@
     <div class="three columns">
           <a class="button tiny" id="update_route" href="#" style="margin-top: 5px;">Update Departure Time</a>
     </div>
-    <div class="seven columns"></div>
+    <div class="seven columns">
+         <img id="ajax-loader" src="/images/ajax-loader-bar.gif" width="128" height="15" style="display: none;" />
+         <div id="ajax-error" class="alert-box alert" style="display: none;">
+            There was an error updating the route options for the new departure time
+         </div>
+    </div>
 </div>

@@ -20,6 +20,10 @@ $(document).ready(function() {
             return;
         }
 
+        // Show the loader, hide error...
+        $('#ajax-loader').show();
+        $('#ajax-error').hide();
+        
         // The departure time was updated. Get new
         // route options
         etd = etd.replace(/\d{2}:\d{2}:\d{2}\.\d{3}$/, newEtd);
@@ -29,11 +33,15 @@ $(document).ready(function() {
             destid : destId,
             etd    : etd
         }, function(data) {
+            $('#ajax-loader').hide();
             $('#optionholder').html(data);
         },
         'html'
         ).fail(function() {
-            console.log('Route update failed');
+
+            // Hide the loader, show error...
+            $('#ajax-loader').hide();
+            $('#ajax-error').show();
         });
 
         evt.preventDefault();

@@ -192,9 +192,10 @@ post '/update_route' => sub {
         unless ($srcid == $destid);
 
     # Update destination and routes.
-    my $status = session status;
+    my $status = session('status');
     $status->{dest}{routes} = $routes;
-
+    session status => $status;
+    
     template route_list => {routes => $routes}, {layout => undef};
 };
 
