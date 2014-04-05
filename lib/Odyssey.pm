@@ -32,7 +32,7 @@ get '/diy' => sub {
 
     my $valid = {
         pax => 2,
-        hotelcategory => 10,
+        hotelcategory => 1,
         double => 1,
         arrplace => 103,
         depplace => 103,
@@ -40,6 +40,7 @@ get '/diy' => sub {
     };
 
     template diy => {
+        hotelcategories => hotelcategories,
         cities => $cities,
         airports => \@airports,
         valid => $valid,

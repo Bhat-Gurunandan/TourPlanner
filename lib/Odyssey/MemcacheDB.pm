@@ -9,18 +9,19 @@ use Dancer::Plugin::Database;
 use Dancer::Plugin::MemcachedFast;
 
 use Exporter qw{import};
-our @EXPORT =
-qw{
-      city
-      cityid
-      startcities
-      nearcities
-      randomcities
-      hotel
-      cityhotels
-      defaulthotel
-      citydetails
-  };
+our @EXPORT = qw{
+    rank2type
+    hotelcategories
+    city
+    cityid
+    startcities
+    nearcities
+    randomcities
+    hotel
+    cityhotels
+    defaulthotel
+    citydetails
+};
 
 =head1 NAME
 
@@ -57,6 +58,47 @@ if you don't export anything, such as for a purely object-oriented module.
 
 =cut
 
+sub rank2type {
+
+    my $rank = shift;
+    my $key = "rank2type:$rank";
+
+    return memcached_get_or_set($key, sub {
+
+        my $qry = 'select
+                hoteltypes_id
+            from
+                hoteltypes h
+                    inner join categories c ON h.categories_id = c.categories_id
+            where c.orderhotelreport = ?';
+        my $sth = database->prepare($qry);
+        $sth->execute($rank);
+
+        my ($type) = $sth->fetchrow_array;
+        $sth->finish;
+        
+        return $type;
+    });
+}
+
+sub hotelcategories {
+
+    my $key = 'hotelcategories';
+    return memcached_get_or_set($key, sub {
+
+        my $qry = 'SELECT
+                HotelType opt,
+                c.OrderHotelReport val
+            FROM
+                hotelTypes h
+                    INNER JOIN categories c ON h.Categories_id = c.categories_id
+            ORDER BY
+                c.OrderHotelReport';
+
+        return database->selectall_arrayref($qry, {Slice => {}});
+    });
+}
+
 sub city {
 
     my $cityid = shift;
@@ -64,20 +106,23 @@ sub city {
     my $key = "city:$cityid";
     return memcached_get_or_set($key, sub {
 
-                                    my $qry = "select
-                        city,
-                        latitude,
-                        longitude
-                from cities where cities_id = ?";
+        my $qry = "select
+                city,
+                latitude,
+                longitude
+            from
+                cities
+            where
+                cities_id = ?";
 
-                                    my $sth = database->prepare($qry);
-                                    $sth->execute($cityid);
+        my $sth = database->prepare($qry);
+        $sth->execute($cityid);
 
-                                    my $row = $sth->fetchrow_arrayref;
-                                    $sth->finish;
+        my $row = $sth->fetchrow_arrayref;
+        $sth->finish;
 
-                                    return $row;
-                                });
+        return $row;
+    });
 }
 
 =head2 cityid
@@ -91,14 +136,13 @@ sub cityid {
     my $key = "cityid:$city";
     return memcached_get_or_set($key, sub {
 
-                                    my $sth = database->prepare("select cities_id from cities where city = ?");
-                                    $sth->execute($city);
+        my $sth = database->prepare("select cities_id from cities where city = ?");
+        $sth->execute($city);
+        my $row = $sth->fetchrow_arrayref;
+        $sth->finish;
 
-                                    my $row = $sth->fetchrow_arrayref;
-                                    $sth->finish;
-
-                                    return $row ? $row->[0] : undef;
-                                });
+        return $row ? $row->[0] : undef;
+    });
 }
 
 =head2 citydetails
@@ -112,29 +156,29 @@ sub citydetails {
 
     return memcached_get_or_set($key, sub {
 
-                                    my $cqry = "select
-                                cities_id,
-                                city,
-                                oneliner,
-                                writeup,
-                                webwriteup,
-                                defaultdays,
-                                latitude,
-                                longitude,
-                                descr,
-                                keywords
-                        from
-                                cities
-                        where
-                                cities_id = ?";
+        my $cqry = "select
+                cities_id,
+                city,
+                oneliner,
+                writeup,
+                webwriteup,
+                defaultdays,
+                latitude,
+                longitude,
+                descr,
+                keywords
+            from
+                cities
+            where
+                cities_id = ?";
 
-                                    my $csth = database->prepare($cqry);
-                                    $csth->execute($cityid);
-                                    my $citydetails = $csth->fetchrow_hashref('NAME_lc');
-                                    $csth->finish;
+        my $csth = database->prepare($cqry);
+        $csth->execute($cityid);
+        my $citydetails = $csth->fetchrow_hashref('NAME_lc');
+        $csth->finish;
 
-                                    return $citydetails;
-                                });
+        return $citydetails;
+    });
 }
 
 =head2 startcities
@@ -145,21 +189,21 @@ sub startcities {
 
     return memcached_get_or_set('startcities', sub {
 
-                                    my $qry = "select
-                        cities_id,
-                        city,
-                        airport
-                from
-                        cities
-                where
-                        nighthalt = 1 and
-                        display = 1 and
-                        city not like '*%'
-                order by
-                        city";
+        my $qry = "select
+                cities_id,
+                city,
+                airport
+            from
+                cities
+            where
+                nighthalt = 1 and
+                display = 1 and
+                city not like '*%'
+            order by
+                city";
 
-                                    return database->selectall_arrayref($qry, {Slice => {}});
-                                });
+        return database->selectall_arrayref($qry, {Slice => {}});
+    });
 }
 
 =head2 nearcities
@@ -173,29 +217,29 @@ sub nearcities {
 
     return memcached_get_or_set($key, sub {
 
-                                    my $nrqry = "select
-                        cities.cities_id,
-                        cities.city,
-                        cities.oneliner,
-                        cities.writeup,
-                        cities.latitude,
-                        cities.longitude
-                from
-                        cities,
-                        nearcities
-                where
-                        cities.cities_id = nearcities.cities_id and
-                        cities.display = 1 and
-                        nearcities.maincities_id = ?";
+        my $nrqry = "select
+                cities.cities_id,
+                cities.city,
+                cities.oneliner,
+                cities.writeup,
+                cities.latitude,
+                cities.longitude
+            from
+                cities,
+                nearcities
+            where
+                cities.cities_id = nearcities.cities_id and
+                cities.display = 1 and
+                nearcities.maincities_id = ?";
 
-                                    my $nrsth = database->prepare($nrqry);
-                                    $nrsth->execute($cityid);
+        my $nrsth = database->prepare($nrqry);
+        $nrsth->execute($cityid);
 
-                                    my $nearcities = $nrsth->fetchall_arrayref({});
-                                    $nrsth->finish;
-
-                                    return $nearcities;
-                                });
+        my $nearcities = $nrsth->fetchall_arrayref({});
+        $nrsth->finish;
+        
+        return $nearcities;
+    });
 }
 
 =head2 randomcities
@@ -207,43 +251,42 @@ sub randomcities {
     my $key = "randomcities";
     my $rndcities = memcached_get_or_set($key, sub {
 
-                                             my $rcqry = "select distinct
-                                cities.cities_id,
-                                cities.city
-                        from
-                                cities,
-                                defaulthotels
-                        where
-                                cities.nighthalt = 1 and
-                                cities.display = 1 and
-                                cities.countries_id = 200 and
-                                defaulthotels.cities_id = cities.cities_id
-                        order by
-                                2";
+        my $rcqry = "select distinct
+                cities.cities_id,
+                cities.city
+            from
+                cities,
+                defaulthotels
+            where
+                cities.nighthalt = 1 and
+                cities.display = 1 and
+                cities.countries_id = 200 and
+                defaulthotels.cities_id = cities.cities_id
+            order by
+                2";
 
-                                             my $rcsth = database->prepare($rcqry);
-                                             $rcsth->execute;
-
-                                             my $rndcities = $rcsth->fetchall_arrayref({});
-                                             $rcsth->finish;
-
-                                             return $rndcities;
-                                         });
-
+        my $rcsth = database->prepare($rcqry);
+        $rcsth->execute;
+        
+        my $rndcities = $rcsth->fetchall_arrayref({});
+        $rcsth->finish;
+        
+        return $rndcities;
+    });
+    
     $key = $key . ':' . join(':', @_);
-
+    
     my $cityid = $_[0];
     my %seen = map { $_ => 1 } @_;
     foreach (@{nearcities($cityid)}) {
         $seen{$_->{cities_id}} = 1;
     }
-
+    
     return memcached_get_or_set($key, sub {
-
-                                    my @rndcities = grep { ! exists $seen{$_->{cities_id}} } @$rndcities;
-
-                                    return \@rndcities;
-                                });
+                                    
+        my @rndcities = grep { ! exists $seen{$_->{cities_id}} } @$rndcities;
+        return \@rndcities;
+    });
 }
 
 =head2 hotel
@@ -257,14 +300,14 @@ sub hotel {
     my $key = "hotel:$hotelid";
     return memcached_get_or_set($key, sub {
 
-                                    my $sth = database->prepare("select organisation from addressbook where addressbook_id = ?");
-                                    $sth->execute($hotelid);
+        my $sth = database->prepare("select organisation from addressbook where addressbook_id = ?");
+        $sth->execute($hotelid);
 
-                                    my $row = $sth->fetchrow_arrayref;
-                                    $sth->finish;
+        my $row = $sth->fetchrow_arrayref;
+        $sth->finish;
 
-                                    return $row ? $row->[0] : undef;
-                                });
+        return $row ? $row->[0] : undef;
+    });
 }
 
 
@@ -281,59 +324,57 @@ sub cityhotels {
     my $key = "cityhotels:$cityid";
 
     return memcached_get_or_set($key, sub {
+        my $hqry = 'select
+                wh.hotel_id,
+                wh.hotel,
+                wh.description,
+                wh.OrderHotelReport as category,
+                wh.HotelType as categoryname,
+                dh.addressbook_id isdefault,
+                wh.categories_id
+            from (
+                select
+                    h.addressbook_id hotel_id,
+                    h.organisation hotel,
+                    h.description description,
+                    h.city city,
+                    h.cities_id,
+                    ht.HotelType as HotelType,
+                    c.OrderHotelReport,
+                    a2.categories_id
+                from
+                    vw_hoteldetails h,
+                    addresscategories a1,
+                    addresscategories a2
+                        inner join HotelTypes ht on a2.categories_id = ht.Categories_id
+                        inner join categories c on ht.Categories_id = c.categories_id
+                where
+                    a1.categories_id = 27 and
+                    a2.categories_id in (
+                        select
+                            ht1.categories_id
+                        from
+                            HotelTypes ht1
+                        where
+                            categories_id is not null
+                     ) and
+                     a1.addressbook_id = h.addressbook_id and
+                     ht.Categories_id is not null and
+                     a2.addressbook_id = h.addressbook_id and
+                     h.cities_id = ?
+            ) wh
+                left join vw_defaulthotels dh on wh.hotel_id = dh.addressbook_id
+            order by
+                category';
 
-                                    my $hqry = "select
-                                wh.hotel_id,
-                                wh.hotel,
-                                wh.description,
-                                wh.category,
-                                wh.categoryname,
-                                dh.addressbook_id isdefault
-                        from (select
-                                        h.addressbook_id hotel_id,
-                                        h.organisation hotel,
-                                        h.description description,
-                                        h.city city,
-                                        h.cities_id,
-                                        case a2.categories_id
-                                                when 23 then 10
-                                                when 36 then 20
-                                                when 22 then 30
-                                                when 8 then 40
-                                                when 35 then 50
-                                        end as category,
-                                        case a2.categories_id
-                                                when 23 then 'Standard'
-                                                when 36 then 'Comfortable'
-                                                when 22 then 'Superior'
-                                                when 8 then 'Luxury'
-                                                when 35 then 'Top of Line'
-                                        end as categoryname
-                                        from
-                                                vw_hoteldetails h,
-                                                addresscategories a1,
-                                        addresscategories a2
-                                        where
-                                                a1.categories_id = 27 and
-                                                a2.categories_id in (23, 36, 22, 8, 35) and
-                                                a1.addressbook_id = h.addressbook_id and
-                                                a2.addressbook_id = h.addressbook_id and
-                                                h.cities_id = ?
-                                ) wh
-                        left join
-                                 vw_defaulthotels dh
-                        on
-                                wh.hotel_id = dh.addressbook_id
-                        order by category";
+        my $hsth = database->prepare($hqry);
+        $hsth->execute($cityid);
 
-                                    my $hsth = database->prepare($hqry);
-                                    $hsth->execute($cityid);
+        my $hotels = $hsth->fetchall_arrayref({});
+        $hsth->finish;
 
-                                    my $hotels = $hsth->fetchall_arrayref({});
-                                    $hsth->finish;
-
-                                    return $hotels;
-                                });
+        return $hotels;
+    });
 }
 
 =head2 defaulthotel
@@ -348,18 +389,18 @@ sub defaulthotel {
     my $hotels = cityhotels($cityid);
     return memcached_get_or_set($key, sub {
 
-                                    # Find default hotel closest to hotelcategory preference
-                                    my $defhotel = $hotels->[0];
+        # Find default hotel closest to hotelcategory preference
+        my $defhotel = $hotels->[0];
 
-                                    foreach (@{$hotels}) {
+        foreach (@{$hotels}) {
 
-                                        next unless $_->{isdefault};
-                                        last if ($_->{category} > $hotelpref);
-                                        $defhotel = $_;
-                                    }
+            next unless $_->{isdefault};
+            last if ($_->{category} > $hotelpref);
+            $defhotel = $_;
+        }
 
-                                    return $defhotel;
-                                });
+        return $defhotel;
+    });
 }
 
 =head1 AUTHOR

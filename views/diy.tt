@@ -35,17 +35,11 @@
 								<label for="hotelcategory" class="right inline">Hotel Category: </label>
 							</div>
 							<div class="six columns">
-								[% categories = [
-									{val => 50, name => 'Top of the Line'}
-									{val => 40, name => 'Luxury' }
-									{val => 30, name => 'Superior'}
-									{val => 20, name => 'Comfortable'}
-									{val => 10, name => 'Standard'} 
-								  ] 
-								%]
 								<select id="hotelcategory"  name="hotelcategory">
-								[% FOREACH category IN categories %]
-									<option value="[% category.val %]"[% IF valid.hotelcategory == category.val %] selected="selected"[% END %]>[% category.name %]</option>
+								[% FOREACH hotelcategory IN hotelcategories %]
+									<option value="[% hotelcategory.val %]"[% IF valid.hotelcategory == hotelcategory.val %] selected="selected"[% END %]>
+                                                                                [% hotelcategory.opt %]
+                                                                        </option>
 								[% END %]
 								</select>
 							</div>
